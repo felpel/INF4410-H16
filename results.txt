@@ -1,0 +1,28 @@
+Exponent: 1
+Temps écoulé appel normal: 8049 ns
+Temps écoulé appel RMI local: 2211796 ns
+Temps écoulé appel RMI distant: 296412946 ns
+Exponent: 2
+Temps écoulé appel normal: 7371 ns
+Temps écoulé appel RMI local: 2252958 ns
+Temps écoulé appel RMI distant: 315995719 ns
+Exponent: 3
+Temps écoulé appel normal: 8262 ns
+Temps écoulé appel RMI local: 2249423 ns
+Temps écoulé appel RMI distant: 312911705 ns
+Exponent: 4
+Temps écoulé appel normal: 10687 ns
+Temps écoulé appel RMI local: 2233992 ns
+Temps écoulé appel RMI distant: 354410477 ns
+Exponent: 5
+Temps écoulé appel normal: 8677 ns
+Temps écoulé appel RMI local: 2402194 ns
+Temps écoulé appel RMI distant: 1039304292 ns
+Exponent: 6
+Temps écoulé appel normal: 8727 ns
+Temps écoulé appel RMI local: 5906536 ns
+Temps écoulé appel RMI distant: 1440355855 ns
+Exponent: 7
+Temps écoulé appel normal: 11842 ns
+Temps écoulé appel RMI local: 25413479 ns
+Temps écoulé appel RMI distant: 10050775757 ns
