@@ -1,3 +1,6 @@
+#Omit compiled files
+bin
+
 # IntelliJ settings
 .idea
 

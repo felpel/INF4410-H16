@@ -10,14 +10,17 @@ import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.UUID;
 
-import ca.polymtl.inf4410.tp1.shared.FileInfo;
-import ca.polymtl.inf4410.tp1.shared.ServerInterface;
+import ca.polymtl.inf4410.tp1.shared.*;
 
 public class Client {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         Client client = new Client();
 
+        //TODO verify this
+        m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation();
+        System.out.println(m_workingDirectory);
+        
         if (args.length > 0) {
             if (args.length == 1) {
                 if (args[0].equals("list")) {
@@ -51,10 +54,11 @@ public class Client {
             System.err.println("No arguments were provided. End of program.");
             return;
         }
-	}
+    }
 
     private ServerInterface m_distantServerStub = null;
     private UUID m_clientId = null;
+    private String m_workingDirectory = null;
 
     public Client() {
         super();
@@ -66,17 +70,21 @@ public class Client {
         //TODO Verify how we setup the host (maybe add another command?)
         m_distantServerStub = loadServerStub("127.0.0.1");
 
+        Scanner scanner = null;
         //Generate client ID if it doesn't exist locally
         try {
-            // Java beurk
-            URL executionPath = new URL(
-                    getClass().getProtectionDomain().getCodeSource().getLocation(),
-                    "clientId");
-            m_clientId = UUID.fromString((String)executionPath.getContent());
-
-        } catch (IOException mue){
+            //Load client id from file
+            File clientIdFile = new File(m_workingDirectory + "/clientId");
+            scanner = new Scanner(clientIdFile);
+            m_clientId = UUID.fromString(scanner.nextLine());
+            
+        } catch (IOException mue) {
             System.err.println("Unable to find the client ID file in the provided path...");
             mue.printStackTrace();
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
         }
 
         if (m_clientId == null){
@@ -113,11 +121,24 @@ public class Client {
         visible à l'utilisateur).
     */
     private void generateClientId() {
+        PrintWriter writer = null;
         try {
             m_clientId = UUID.fromString(m_distantServerStub.generateClientId());
+            
+            //Save client id to local directory
+            File clientIdFile = new File(m_workingDirectory + "/clientId");
+            writer = new PrintWriter(clientIdFile);
+            writer.print(m_clientId.toString());
         } catch (RemoteException e) {
             System.err.println("Failed to retrieve the client ID from server...");
             e.printStackTrace();
+        } catch (FileNotFoundException fnfe) {
+            System.err.println("Impossible d'ouvrir le fichier clientId...");
+            fnfe.printStackTrace();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 
@@ -131,7 +152,7 @@ public class Client {
         try {
             m_distantServerStub.create(filename);
             System.out.println(String.format("%s ajouté.", filename));
-        } catch (RemoteException e){
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
@@ -146,16 +167,10 @@ public class Client {
         try {
             List<FileInfo> files = m_distantServerStub.list();
 
-            for(FileInfo file : files){
-                String status = "";
-
-                String lockedUser = file.getLockedUser();
-                if (file.getLocked() && lockedUser != null && !lockedUser.isEmpty()) {
-                    status = String.format("vérouillé par %s", lockedUser);
-                }
-                else {
-                    status = "non vérouillé";
-                }
+            for(FileInfo file : files){                
+                String status = file.getLockedUser() != null ?
+                    String.format("vérouillé par %s", lockedUser.toString()) :
+                    "non vérouillé";
 
                 System.out.println(String.format("* %s\t%s", file.getName(), status));
             }
@@ -205,11 +220,20 @@ public class Client {
         Le fichier est écrit dans le répertoire local courant.
     */
     private void getFile(String filename) {
-        //TODO:
-        //1) Get file path
-        //2) Verify if the file is on the client
-        //3) Generate checksum if file exists, -1 otherwise (-1 = must retrieve file absolutely)
-        //4) If we retrieved the file and it's different from null, write it on local dir
+        try {
+            String filepath = m_workingDirectory + filename;
+            String checksum = Utilities.getChecksumFromFile(filepath);
+            
+            FileInfo file = m_distantServerStub.get(filename, checksum);
+            if (file != null) {
+                Path lastVersion = Paths.get(filepath);
+                Files.write(lastVersion, file.getContent());
+            } else {
+                System.out.println("Fichier déjà synchronisé");
+            }
+        } catch (RemoteException re) {
+            re.printStackTrace();
+        }
     }
 
     /*  lock(nom, clientid, checksum)
@@ -222,9 +246,19 @@ public class Client {
         verrouillé par un autre client.
     */
     private void lockFile(String filename) {
-        //TODO
-        // Client side is identical to getFile steps 1 to 4 (checksum & file overwrite)
-        // BUT we should not overwrite if the file is locked (still need to compute checksum)
+        try {
+            String filepath = m_workingDirectory + filename;
+            String checksum = Utilities.getChecksumFromFile(filepath);
+            
+            FileInfo file = m_distantServerStub.lock(filename, m_clientId, checksum);
+            if (file != null) {
+                Path lastVersion = Paths.get(filepath);
+                Files.write(lastVersion, file.getContent());
+                System.out.println(String.format("%s vérouillé.", filename));
+            }
+        } catch (RemoteException re) {
+            re.printStackTrace();
+        }
     }
 
     /*  push(nom, contenu, clientid)

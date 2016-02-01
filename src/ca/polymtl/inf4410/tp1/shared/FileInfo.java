@@ -5,8 +5,7 @@ import java.io.Serializable;
 public class FileInfo implements Serializable {
     private String m_name;
     private byte[] m_content;
-    private boolean m_locked;
-    private String m_lockedUser;
+    private UUID m_lockedUser;
 
     public FileInfo(String name) {
         this(name, null);
@@ -15,7 +14,7 @@ public class FileInfo implements Serializable {
     public FileInfo(String name, byte[] content){
         m_name = name;
         m_content = content;
-        m_locked = false;
+        m_lockedUser = null;
     }
 
     public String getName() {
@@ -30,33 +29,23 @@ public class FileInfo implements Serializable {
         m_content = content;
     }
 
-    public boolean getLocked() {
-        return m_locked;
-    }
-
-    public void setLocked(boolean locked) {
-        m_locked = locked;
-    }
-
-    public String getLockedUser() {
+    public UUID getLockedUser() {
         return m_lockedUser;
     }
 
-    public void setLockedUser(String user){
+    public void setLockedUser(UUID user){
         m_lockedUser = user;
     }
 
-    public boolean Lock(String user){
-        if (!m_locked && (m_lockedUser == null || !m_lockedUser.isEmpty())) {
-            setLocked(true);
+    public boolean lock(UUID user){
+        if (m_lockedUser == null) {
             setLockedUser(user);
             return true;
         }
         return false;
     }
 
-    public void Unlock(){
-        setLocked(false);
+    public void unlock(){
         setLockedUser(null);
     }
 }

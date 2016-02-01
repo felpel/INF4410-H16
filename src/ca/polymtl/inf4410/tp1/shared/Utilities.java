@@ -1,11 +1,54 @@
 package ca.polymtl.inf4410.tp1.shared;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import java.security.MessageDigest;
+import java.io.File;
+import java.io.FileInputStream;
+
 
 public class Utilities {
-    public static String GetFileChecksum(String filepath){
-       //TODO Generate MD5 checksum
-       //Might check this: http://howtodoinjava.com/core-java/io/how-to-generate-sha-or-md5-file-checksum-hash-in-java/
-       throw new NotImplementedException();
+    public static String getChecksumFromFile(String filepath){
+       File file = new File(filepath);
+       String checksum = "-1";
+       if (file.exists()) {
+            //Based on: http://bit.ly/1nZQixR
+       
+            //Use MD5 algorithm
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+       
+            //Get file input stream for reading the file content
+            FileInputStream fis = new FileInputStream(file);
+            
+            //Create byte array to read data in chunks
+            byte[] byteArray = new byte[1024];
+            int bytesCount = 0; 
+            
+            //Read file data and update in message digest
+            while ((bytesCount = fis.read(byteArray)) != -1) {
+                digest.update(byteArray, 0, bytesCount);
+            };
+            
+            //close the stream; We don't need it now.
+            fis.close();
+            
+            checksum = getChecksumFromBytes(digest.digest());
+       }
+       
+       return checksum;
+    }
+    
+    public static String getChecksumFromBytes(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "-1";
+        }
+        
+        //This bytes[] has bytes in decimal format;
+        //Convert it to hexadecimal format
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i< bytes.length ;i++)
+        {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        
+        return sb.toString();
     }
 }
