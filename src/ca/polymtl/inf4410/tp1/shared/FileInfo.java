@@ -1,6 +1,7 @@
 package ca.polymtl.inf4410.tp1.shared;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class FileInfo implements Serializable {
     private String m_name;

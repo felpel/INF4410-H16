@@ -1,57 +1,60 @@
 package ca.polymtl.inf4410.tp1.client;
 
+import ca.polymtl.inf4410.tp1.shared.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
-
-import ca.polymtl.inf4410.tp1.shared.*;
 
 public class Client {
 
     public static void main(String[] args) {
         Client client = new Client();
 
-        //TODO verify this
-        m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation();
-        System.out.println(m_workingDirectory);
-        
         if (args.length > 0) {
             if (args.length == 1) {
                 if (args[0].equals("list")) {
-                    client.listFiles();
+                    client.list();
                 }
                 if (args[0].equals("syncLocalDir")) {
-                    client.synchronizeLocalDirectory();
+                    client.syncLocalDir();
                 }
             }
 
             if (args.length == 2){
                 if (args[0].equals("create")) {
-                    client.createFile(args[1]);
+                    client.create(args[1]);
                 }
 
                 if (args[0].equals("get")) {
-                    client.getFile(args[1]);
+                    client.get(args[1]);
                 }
 
                 if (args[0].equals("lock")) {
-                    client.lockFile(args[1]);
+                    client.lock(args[1]);
                 }
 
                 if (args[0].equals("push")) {
-                    client.pushFile(args[1]);
+                    client.push(args[1]);
                 }
             } else {
-                System.err.println("Provided arguments were invalid.");
+                System.err.println("Les arguments fournis au programme sont invalides.");
             }
         } else {
-            System.err.println("No arguments were provided. End of program.");
+            System.err.println("Aucun argument n'a ete fourni au programme.");
             return;
         }
     }
@@ -62,6 +65,15 @@ public class Client {
 
     public Client() {
         super();
+
+        //TODO verify this
+        try {
+            m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        System.out.println(m_workingDirectory);
+
 
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -79,7 +91,7 @@ public class Client {
             m_clientId = UUID.fromString(scanner.nextLine());
             
         } catch (IOException mue) {
-            System.err.println("Unable to find the client ID file in the provided path...");
+            System.err.println("Impossible de trouver le fichier contenant l'identifiant du client...");
             mue.printStackTrace();
         } finally {
             if (scanner != null) {
@@ -129,8 +141,9 @@ public class Client {
             File clientIdFile = new File(m_workingDirectory + "/clientId");
             writer = new PrintWriter(clientIdFile);
             writer.print(m_clientId.toString());
+
         } catch (RemoteException e) {
-            System.err.println("Failed to retrieve the client ID from server...");
+            System.err.println("Echec pour recuperer l'identifiant du client sur le serveur");
             e.printStackTrace();
         } catch (FileNotFoundException fnfe) {
             System.err.println("Impossible d'ouvrir le fichier clientId...");
@@ -148,7 +161,7 @@ public class Client {
         spécifié. Si un fichier portant ce nom existe déjà,
         l'opération échoue.
     */
-    private void createFile(String filename) {
+    private void create(String filename) {
         try {
             m_distantServerStub.create(filename);
             System.out.println(String.format("%s ajouté.", filename));
@@ -163,13 +176,13 @@ public class Client {
         du client possédant le verrou (le cas échéant) est
         retourné.
     */
-    private void listFiles() {
+    private void list() {
         try {
             List<FileInfo> files = m_distantServerStub.list();
 
             for(FileInfo file : files){                
                 String status = file.getLockedUser() != null ?
-                    String.format("vérouillé par %s", lockedUser.toString()) :
+                    String.format("vérouillé par %s", file.getLockedUser().toString()) :
                     "non vérouillé";
 
                 System.out.println(String.format("* %s\t%s", file.getName(), status));
@@ -190,16 +203,30 @@ public class Client {
         fichiers existants seront écrasés et remplacés par
         les versions du le serveur.
     */
-    private void synchronizeLocalDirectory() {
+    private void syncLocalDir() {
         try {
             List<FileInfo> files = m_distantServerStub.syncLocalDir();
 
-            for (FileInfo file : files){
-                //TODO 1) Overwrite local files
-                //TODO 2) Verify that we need to delete files that are no longer on the server
+            File dir = new File(m_workingDirectory);
+
+            File[] allFiles = dir.listFiles();
+            if (allFiles != null) {
+                for (File file : allFiles) {
+                    if (!file.getPath().contains(".jar"))
+                    {
+                        file.delete();
+                    }
+                }
             }
+
+            for (FileInfo file : files){
+                Files.write(Paths.get(m_workingDirectory + file.getName()), file.getContent());
+            }
+
         } catch (RemoteException e) {
             e.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -219,7 +246,7 @@ public class Client {
 
         Le fichier est écrit dans le répertoire local courant.
     */
-    private void getFile(String filename) {
+    private void get(String filename) {
         try {
             String filepath = m_workingDirectory + filename;
             String checksum = Utilities.getChecksumFromFile(filepath);
@@ -228,11 +255,14 @@ public class Client {
             if (file != null) {
                 Path lastVersion = Paths.get(filepath);
                 Files.write(lastVersion, file.getContent());
+                System.out.println(String.format("%s synchronisé.", filename));
             } else {
                 System.out.println("Fichier déjà synchronisé");
             }
         } catch (RemoteException re) {
             re.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -245,7 +275,7 @@ public class Client {
         inutile) . L'opération échoue si le fichier est déjà
         verrouillé par un autre client.
     */
-    private void lockFile(String filename) {
+    private void lock(String filename) {
         try {
             String filepath = m_workingDirectory + filename;
             String checksum = Utilities.getChecksumFromFile(filepath);
@@ -255,9 +285,13 @@ public class Client {
                 Path lastVersion = Paths.get(filepath);
                 Files.write(lastVersion, file.getContent());
                 System.out.println(String.format("%s vérouillé.", filename));
+            } else {
+                System.out.println("Le fichier est déjà vérouillé et à jour.");
             }
         } catch (RemoteException re) {
             re.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -270,7 +304,16 @@ public class Client {
         remplace le contenu qui était sur le serveur
         auparavant et le fichier est déverrouillé.
     */
-    private void pushFile(String filename) {
-        //TODO Push content if file is in correct state
+    private void push(String filename) {
+        try {
+            String filepath = m_workingDirectory + filename;
+            byte[] data = Files.readAllBytes(Paths.get(filepath));
+            m_distantServerStub.push(filename, data, m_clientId);
+            System.out.println(String.format("%s a été envoyé au serveur", filename));
+        } catch (RemoteException re) {
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 }
