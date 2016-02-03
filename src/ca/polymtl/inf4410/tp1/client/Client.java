@@ -24,39 +24,40 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
 
-        if (args.length > 0) {
-            if (args.length == 1) {
-                if (args[0].equals("list")) {
-                    client.list();
-                }
-                if (args[0].equals("syncLocalDir")) {
-                    client.syncLocalDir();
-                }
-            }
+	switch (args.length) {
+	  case 1:
+	    {
+		if (args[0].equals("list")) {
+		    client.list();
+		}
+		if (args[0].equals("syncLocalDir")) {
+		    client.syncLocalDir();
+		}
+	    }
+	    break;
+	  case 2:
+	    {
+		if (args[0].equals("create")) {
+		    client.create(args[1]);
+		}
 
-            if (args.length == 2){
-                if (args[0].equals("create")) {
-                    client.create(args[1]);
-                }
+		if (args[0].equals("get")) {
+		    client.get(args[1]);
+		}
 
-                if (args[0].equals("get")) {
-                    client.get(args[1]);
-                }
+		if (args[0].equals("lock")) {
+		    client.lock(args[1]);
+		}
 
-                if (args[0].equals("lock")) {
-                    client.lock(args[1]);
-                }
-
-                if (args[0].equals("push")) {
-                    client.push(args[1]);
-                }
-            } else {
-                System.err.println("Les arguments fournis au programme sont invalides.");
-            }
-        } else {
-            System.err.println("Aucun argument n'a ete fourni au programme.");
-            return;
-        }
+		if (args[0].equals("push")) {
+		    client.push(args[1]);
+		}
+	    }
+	    break;
+	  default:
+	    System.err.println("Les arguments fournis au programme sont invalides.");
+	    break;
+	}
     }
 
     private ServerInterface m_distantServerStub = null;
@@ -69,11 +70,10 @@ public class Client {
         //TODO verify this
         try {
             m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+            m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println(m_workingDirectory);
-
 
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -86,13 +86,15 @@ public class Client {
         //Generate client ID if it doesn't exist locally
         try {
             //Load client id from file
-            File clientIdFile = new File(m_workingDirectory + "/clientId");
+            File clientIdFile = new File(String.format("%s/%s", m_workingDirectory, "clientId"));
             scanner = new Scanner(clientIdFile);
             m_clientId = UUID.fromString(scanner.nextLine());
             
         } catch (IOException mue) {
             System.err.println("Impossible de trouver le fichier contenant l'identifiant du client...");
             mue.printStackTrace();
+        } catch (Exception ex) {
+	    ex.printStackTrace();
         } finally {
             if (scanner != null) {
                 scanner.close();
@@ -137,8 +139,9 @@ public class Client {
         try {
             m_clientId = UUID.fromString(m_distantServerStub.generateClientId());
             
+            System.out.println(String.format("*** Nouveau client enregistré, votre identifiant: %s ***", m_clientId));
             //Save client id to local directory
-            File clientIdFile = new File(m_workingDirectory + "/clientId");
+            File clientIdFile = new File(String.format("%s/%s", m_workingDirectory, "clientId"));
             writer = new PrintWriter(clientIdFile);
             writer.print(m_clientId.toString());
 
@@ -148,7 +151,10 @@ public class Client {
         } catch (FileNotFoundException fnfe) {
             System.err.println("Impossible d'ouvrir le fichier clientId...");
             fnfe.printStackTrace();
-        } finally {
+        } catch (Exception e) {
+	    e.printStackTrace();
+        }  
+        finally {
             if (writer != null) {
                 writer.close();
             }
@@ -306,14 +312,16 @@ public class Client {
     */
     private void push(String filename) {
         try {
-            String filepath = m_workingDirectory + filename;
-            byte[] data = Files.readAllBytes(Paths.get(filepath));
+            byte[] data = Files.readAllBytes(Paths.get(m_workingDirectory, filename));
             m_distantServerStub.push(filename, data, m_clientId);
             System.out.println(String.format("%s a été envoyé au serveur", filename));
         } catch (RemoteException re) {
-
+	    System.out.println("lol");
+	    re.getMessage();
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        } catch (Exception e) {
+	    e.printStackTrace();
         }
     }
 }

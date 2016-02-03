@@ -3,7 +3,7 @@ package ca.polymtl.inf4410.tp1.shared;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class FileInfo implements Serializable {
+public class FileInfo implements Serializable, Comparable<FileInfo> {
     private String m_name;
     private byte[] m_content;
     private UUID m_lockedUser;
@@ -48,5 +48,10 @@ public class FileInfo implements Serializable {
 
     public void unlock(){
         setLockedUser(null);
+    }
+    
+    @Override
+    public int compareTo(FileInfo other) {
+	return this.getName().compareToIgnoreCase(other.getName());
     }
 }

@@ -16,9 +16,11 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.nio.charset.Charset;
+import java.util.Collections;
 
 public class Server implements ServerInterface {
-
+    public final String CLIENT_ID_FILE = "clientIds.txt";
     private List<FileInfo> m_files = null;
     private List<UUID> m_ids = null;
     private String m_workingDirectory = null;
@@ -33,6 +35,7 @@ public class Server implements ServerInterface {
 
         try {
             m_workingDirectory =  this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+            m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -42,7 +45,8 @@ public class Server implements ServerInterface {
             m_ids = new ArrayList<>();
 
             try {
-                List<String> lines = Files.readAllLines(Paths.get(m_workingDirectory + "clientIds"));
+		Charset cs = Charset.forName("UTF-8");
+                List<String> lines = Files.readAllLines(Paths.get(m_workingDirectory, CLIENT_ID_FILE), cs);
 
                 for(String line : lines) {
                     if (line != null && !line.isEmpty()) {
@@ -55,9 +59,10 @@ public class Server implements ServerInterface {
                 File[] allFiles = serverDirectory.listFiles();
                 if (allFiles != null) {
                     for (File file : allFiles) {
-                        if (file.getPath().contains(".jar")) {
+                        if (file.getPath().contains(".jar") || file.isDirectory()) {
                             continue;
                         }
+			System.out.println(file.getPath().toString());
 
                         byte[] content = Files.readAllBytes(Paths.get(file.getPath()));
                         FileInfo serverFile = new FileInfo(file.getName(), content);
@@ -80,7 +85,7 @@ public class Server implements ServerInterface {
             }
 
             Files.write(
-                Paths.get(m_workingDirectory + "clientIds"),
+                Paths.get(m_workingDirectory, CLIENT_ID_FILE),
                 sb.toString().getBytes(),
                 StandardOpenOption.WRITE
             );
@@ -147,6 +152,8 @@ public class Server implements ServerInterface {
                                      "sur le serveur...");
         }
 
+        Collections.sort(m_files);
+        
         return m_files;
     }
 
