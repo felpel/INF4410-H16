@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.rmi.ConnectException;
@@ -33,19 +34,15 @@ public class Server implements ServerInterface {
     public Server() {
         super();
 
-        try {
-            m_workingDirectory =  this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
-            m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        m_workingDirectory =  this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+        m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
 
         if (m_workingDirectory != null) {
             m_files = new ArrayList<>();
             m_ids = new ArrayList<>();
 
             try {
-		Charset cs = Charset.forName("UTF-8");
+                Charset cs = Charset.forName("UTF-8");
                 List<String> lines = Files.readAllLines(Paths.get(m_workingDirectory, CLIENT_ID_FILE), cs);
 
                 for(String line : lines) {
@@ -62,7 +59,7 @@ public class Server implements ServerInterface {
                         if (file.getPath().contains(".jar") || file.isDirectory()) {
                             continue;
                         }
-			System.out.println(file.getPath().toString());
+			            System.out.println(file.getPath().toString());
 
                         byte[] content = Files.readAllBytes(Paths.get(file.getPath()));
                         FileInfo serverFile = new FileInfo(file.getName(), content);
@@ -75,34 +72,6 @@ public class Server implements ServerInterface {
         }
     }
     
-    protected void finalize() throws Throwable {
-        super.finalize();
-
-        try {
-            StringBuilder sb = new StringBuilder();
-            for (UUID id : m_ids) {
-                sb.append(id.toString() + "\n");
-            }
-
-            Files.write(
-                Paths.get(m_workingDirectory, CLIENT_ID_FILE),
-                sb.toString().getBytes(),
-                StandardOpenOption.WRITE
-            );
-
-            for(FileInfo serverFile : m_files) {
-                Files.write(
-                    Paths.get(m_workingDirectory + serverFile.getName()),
-                    serverFile.getContent(),
-                    StandardOpenOption.WRITE
-                );
-            }
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
     private void run() {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -216,5 +185,54 @@ public class Server implements ServerInterface {
         }
 
         throw new RemoteException("Le fichier demandé n'existe pas sur le serveur...");
+    }
+
+    @Override
+    public byte[] cat(String filename) throws RemoteException {
+        FileInfo file = this.getFileOnServer(filename);
+        return file.getContent();
+    }
+
+    public void save() throws RemoteException {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (UUID id : m_ids) {
+                sb.append(id.toString() + "\n");
+            }
+
+            Path clientsFilePath = Paths.get(m_workingDirectory, CLIENT_ID_FILE);
+
+            if (!Files.exists(clientsFilePath)) {
+                Files.createFile(clientsFilePath);
+            }
+
+            Files.write(
+                clientsFilePath,
+                sb.toString().getBytes(),
+                StandardOpenOption.WRITE
+            );
+
+            for(FileInfo serverFile : m_files) {
+                Path serverFilePath = Paths.get(m_workingDirectory + serverFile.getName());
+
+                if (!Files.exists(serverFilePath)) {
+                    Files.createFile(serverFilePath);
+                }
+
+                Files.write(
+                    serverFilePath,
+                    serverFile.getContent() != null ? serverFile.getContent() : new byte[0],
+                    StandardOpenOption.WRITE
+                );
+            }
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    public void shutdown() throws RemoteException {
+        this.save();
+        System.exit(0);
     }
 }

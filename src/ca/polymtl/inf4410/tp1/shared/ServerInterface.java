@@ -13,4 +13,9 @@ public interface ServerInterface extends Remote {
     FileInfo get(String filename, String checksum) throws RemoteException;
     FileInfo lock(String filename, UUID clientId, String checksum) throws RemoteException;
     void push(String filename, byte[] content, UUID clientId) throws RemoteException;
+
+    //Debugging purpose
+    byte[] cat(String filename) throws RemoteException;
+    void save() throws RemoteException;
+    void shutdown() throws RemoteException;
 }

@@ -25,35 +25,51 @@ public class Client {
         Client client = new Client();
 
 	switch (args.length) {
-	  case 1:
+        case 1:
 	    {
-		if (args[0].equals("list")) {
-		    client.list();
-		}
-		if (args[0].equals("syncLocalDir")) {
-		    client.syncLocalDir();
-		}
+    		if (args[0].equals("list")) {
+    		    client.list();
+    		}
+    		if (args[0].equals("syncLocalDir")) {
+    		    client.syncLocalDir();
+    		}
+            if (args[0].equals("save")) {
+                client.save();
+            }
+            if (args[0].equals("shutdown")) {
+                client.shutdown();
+            }
 	    }
 	    break;
-	  case 2:
+        case 2:
 	    {
-		if (args[0].equals("create")) {
-		    client.create(args[1]);
-		}
+            if (args[0].equals("cat")) {
+                client.showContent(args[1]);
+            }
+    		if (args[0].equals("create")) {
+    		    client.create(args[1]);
+    		}
 
-		if (args[0].equals("get")) {
-		    client.get(args[1]);
-		}
+    		if (args[0].equals("get")) {
+    		    client.get(args[1]);
+    		}
 
-		if (args[0].equals("lock")) {
-		    client.lock(args[1]);
-		}
+    		if (args[0].equals("lock")) {
+    		    client.lock(args[1]);
+    		}
 
-		if (args[0].equals("push")) {
-		    client.push(args[1]);
-		}
+    		if (args[0].equals("push")) {
+    		    client.push(args[1]);
+    		}
 	    }
 	    break;
+        case 3:
+        {
+            if (args[0].equals("concat")) {
+                client.concat(args[1], args[2]);
+            }
+        }
+        break;
 	  default:
 	    System.err.println("Les arguments fournis au programme sont invalides.");
 	    break;
@@ -68,12 +84,8 @@ public class Client {
         super();
 
         //TODO verify this
-        try {
-            m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
-            m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        m_workingDirectory = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+        m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
 
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -224,9 +236,10 @@ public class Client {
                     }
                 }
             }
-
+            final byte[] noData = new byte[0];
             for (FileInfo file : files){
-                Files.write(Paths.get(m_workingDirectory + file.getName()), file.getContent());
+                byte[] data = file.getContent() != null ? file.getContent() : noData;
+                Files.write(Paths.get(m_workingDirectory, file.getName()), data);
             }
 
         } catch (RemoteException e) {
@@ -316,12 +329,63 @@ public class Client {
             m_distantServerStub.push(filename, data, m_clientId);
             System.out.println(String.format("%s a été envoyé au serveur", filename));
         } catch (RemoteException re) {
-	    System.out.println("lol");
-	    re.getMessage();
+	       System.out.println("lol");
+	       re.getMessage();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } catch (Exception e) {
-	    e.printStackTrace();
+	       e.printStackTrace();
+        }
+    }
+
+    // Testing purpose
+    private void showContent(String filename) {
+        try {            
+            byte[] data = m_distantServerStub.cat(filename);
+
+            System.out.println(String.format("* %s (côté serveur)", filename));
+            System.out.println("********************************************************");
+
+            if (data != null && data.length != 0) {
+                System.out.println(new String(data, "UTF-8"));   
+            } else {
+                System.out.println("(Fichier vide)");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Testing purpose
+    private void concat(String filename, String content) {
+        if (filename == null || content == null || content.isEmpty()) {
+            return;
+        }
+
+        try {
+            Files.write(Paths.get(m_workingDirectory, filename), content.getBytes());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void save() {
+        try {
+            m_distantServerStub.save();
+            System.out.println("Fichiers enregistres sur le serveur...");    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shutdown() {
+        try {
+            m_distantServerStub.shutdown();
+            System.out.println("Serveur arrete...");    
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

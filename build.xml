@@ -14,9 +14,9 @@
 	</target>
 	<target name="clean">
 		<delete dir="bin" />
-		<delete file="server.jar" />
-		<delete file="client.jar" />
-		<delete file="shared.jar" />
+		<delete file="deploy/srv/server.jar" />
+		<delete file="deploy/cli/client.jar" />
+		<delete file="deploy/shared/shared.jar" />
 	</target>
 	<target depends="init" name="build-class">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false">
@@ -25,8 +25,8 @@
 		</javac>
 	</target>
 	<target depends="build-class" name="build-jar">
-		<jar destfile="shared.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/shared/**" update="false" />
-		<jar destfile="server.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/server/**" update="false" />
-		<jar destfile="client.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/client/**" update="false" />
+		<jar destfile="deploy/shared/shared.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/shared/**" update="false" />
+		<jar destfile="deploy/srv/server.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/server/**" update="false" />
+		<jar destfile="deploy/cli/client.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/client/**" update="false" />
 	</target>
 </project>
