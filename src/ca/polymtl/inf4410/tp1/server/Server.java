@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 
 public class Server implements ServerInterface {
-    public final String CLIENT_ID_FILE = "clientIds.txt";
+    
     private List<FileInfo> m_files = null;
     private List<UUID> m_ids = null;
     private String m_workingDirectory = null;
@@ -35,41 +35,10 @@ public class Server implements ServerInterface {
         super();
 
         m_workingDirectory =  this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
-        m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/"));
+        m_workingDirectory = m_workingDirectory.substring("file:".length(), m_workingDirectory.lastIndexOf("/") + 1);
 
-        if (m_workingDirectory != null) {
-            m_files = new ArrayList<>();
-            m_ids = new ArrayList<>();
-
-            try {
-                Charset cs = Charset.forName("UTF-8");
-                List<String> lines = Files.readAllLines(Paths.get(m_workingDirectory, CLIENT_ID_FILE), cs);
-
-                for(String line : lines) {
-                    if (line != null && !line.isEmpty()) {
-                        m_ids.add(UUID.fromString(line));
-                    }
-                }
-
-                File serverDirectory = new File(m_workingDirectory);
-
-                File[] allFiles = serverDirectory.listFiles();
-                if (allFiles != null) {
-                    for (File file : allFiles) {
-                        if (file.getPath().contains(".jar") || file.isDirectory()) {
-                            continue;
-                        }
-			            System.out.println(file.getPath().toString());
-
-                        byte[] content = Files.readAllBytes(Paths.get(file.getPath()));
-                        FileInfo serverFile = new FileInfo(file.getName(), content);
-                        m_files.add(serverFile);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        m_files = new ArrayList<>();
+        m_ids = new ArrayList<>();
     }
     
     private void run() {
@@ -106,7 +75,7 @@ public class Server implements ServerInterface {
         for (FileInfo file : m_files){
             if (file.getName().equals(filename)){
                 throw new RemoteException(
-                        String.format("%s existe déjà sur le serveur.", filename)
+                    String.format("%s existe déjà sur le serveur.", filename)
                 );
             }
         }
@@ -117,8 +86,7 @@ public class Server implements ServerInterface {
     @Override
     public List<FileInfo> list() throws RemoteException {
         if (m_files == null) {
-           throw new RemoteException("Impossible de recuperer la liste des fichiers " +
-                                     "sur le serveur...");
+           throw new RemoteException("Impossible de recuperer la liste des fichiers sur le serveur...");
         }
 
         Collections.sort(m_files);
@@ -149,8 +117,7 @@ public class Server implements ServerInterface {
         if (latestVersion.getLockedUser() != null && !latestVersion.getLockedUser().equals(clientId)) {
             throw new RemoteException("Operation refusee : le fichier est verrouillé par un autre utilisateur");
         }
-        
-        //TODO Verify if same reference in m_files
+
         latestVersion.lock(clientId);
 
         String serverFileChecksum = Utilities.getChecksumFromBytes(latestVersion.getContent());
@@ -172,11 +139,16 @@ public class Server implements ServerInterface {
             throw new RemoteException("Operation refusee: le fichier est deja verouille par un autre utilisateur");
         }
 
-        //TODO Verify if same reference in m_files
         latestVersion.setContent(content);
         latestVersion.unlock();
     }
 
+    @Override
+    public byte[] cat(String filename) throws RemoteException {
+        FileInfo file = this.getFileOnServer(filename);
+        return file.getContent();
+    }
+    
     private FileInfo getFileOnServer(String filename) throws RemoteException {
         for (FileInfo file : m_files){
             if (file.getName().equals(filename)){
@@ -185,54 +157,5 @@ public class Server implements ServerInterface {
         }
 
         throw new RemoteException("Le fichier demandé n'existe pas sur le serveur...");
-    }
-
-    @Override
-    public byte[] cat(String filename) throws RemoteException {
-        FileInfo file = this.getFileOnServer(filename);
-        return file.getContent();
-    }
-
-    public void save() throws RemoteException {
-        try {
-            StringBuilder sb = new StringBuilder();
-            for (UUID id : m_ids) {
-                sb.append(id.toString() + "\n");
-            }
-
-            Path clientsFilePath = Paths.get(m_workingDirectory, CLIENT_ID_FILE);
-
-            if (!Files.exists(clientsFilePath)) {
-                Files.createFile(clientsFilePath);
-            }
-
-            Files.write(
-                clientsFilePath,
-                sb.toString().getBytes(),
-                StandardOpenOption.WRITE
-            );
-
-            for(FileInfo serverFile : m_files) {
-                Path serverFilePath = Paths.get(m_workingDirectory + serverFile.getName());
-
-                if (!Files.exists(serverFilePath)) {
-                    Files.createFile(serverFilePath);
-                }
-
-                Files.write(
-                    serverFilePath,
-                    serverFile.getContent() != null ? serverFile.getContent() : new byte[0],
-                    StandardOpenOption.WRITE
-                );
-            }
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    public void shutdown() throws RemoteException {
-        this.save();
-        System.exit(0);
     }
 }

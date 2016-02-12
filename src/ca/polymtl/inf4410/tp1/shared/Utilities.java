@@ -46,7 +46,7 @@ public class Utilities {
     
     public static String getChecksumFromBytes(byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
-            return "-1";
+            return "0";
         }
         
         //This bytes[] has bytes in decimal format;

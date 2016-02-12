@@ -16,6 +16,4 @@ public interface ServerInterface extends Remote {
 
     //Debugging purpose
     byte[] cat(String filename) throws RemoteException;
-    void save() throws RemoteException;
-    void shutdown() throws RemoteException;
 }

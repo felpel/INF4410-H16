@@ -13,11 +13,15 @@ public class FileInfo implements Serializable, Comparable<FileInfo> {
     }
 
     public FileInfo(String name, byte[] content){
-        m_name = name;
-        m_content = content;
-        m_lockedUser = null;
+        setName(name);
+        setContent(content);
+        setLockedUser(null);
     }
 
+    public void setName(String name) {
+        m_name = name;
+    }
+    
     public String getName() {
         return m_name;
     }
@@ -27,7 +31,7 @@ public class FileInfo implements Serializable, Comparable<FileInfo> {
     }
 
     public void setContent(byte[] content){
-        m_content = content;
+        m_content = content != null ? content : new byte[0];
     }
 
     public UUID getLockedUser() {

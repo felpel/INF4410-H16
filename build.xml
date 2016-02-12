@@ -14,9 +14,7 @@
 	</target>
 	<target name="clean">
 		<delete dir="bin" />
-		<delete file="deploy/srv/server.jar" />
-		<delete file="deploy/cli/client.jar" />
-		<delete file="deploy/shared/shared.jar" />
+                <delete dir="deploy" />
 	</target>
 	<target depends="init" name="build-class">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false">
