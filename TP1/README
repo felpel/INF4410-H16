@@ -1,0 +1,52 @@
+Félix Pelletier 	1581243 felix.pelletier@polymtl.ca
+Jean-Frédéric Faust 1583921 jean-frederic.faust@polymtl.ca
+
+INSTRUCTIONS (LIRE ATTENTIVEMENT):
+
+1. Dezippez l'archive.
+2. Rendez-vous au répertoire où l'archive est dézippée.
+3. Ouvrez un terminal et entrez la commande "ant".
+4. Démarrez le registre RMI dans "bin" en entrant la commande "rmiregistry &".
+5. Faites "cd .." pour revenir au répertoire racine du programme.
+6. Ouvrez un terminal pour le serveur et un autre terminal pour chaque client désiré.
+7. Pour le serveur, il suffit simplement d'entrer "./server". Il devrait afficher "Server ready.". Assurez-vous d'avoir démarrer le serveur avant de partir les clients.
+8. Pour un client, la commande est "./client". Un menu sera affiché pour les diverses options demandées dans l'énoncé du travail pratique.
+9. Utiliser le client à l'aide du menu. La commande "options" vous permet de revoir les diverses commandes accessibles.
+
+L'arborescence générale devrait être comme suit:
+
+INF4410-H16
+	src/ca/polymtl/inf4410/tp1
+		client
+			Client.java
+		server
+			Server.java
+		shared
+			FileInfo.java
+			ServerInterface.java
+			Utilities.java
+	build.xml
+	client
+	policy
+	README
+	server
+
+La structure de déploiement devrait ressembler à ceci (après "ant" ou "ant build-jar") :
+
+deploy
+    cli
+		client.jar
+        clientId1
+			clientId (fichier contenant le UUID)
+			f2
+        clientId2
+        	clientId
+			f1
+		clientIdN
+			clientId
+			fN
+			f0
+    srv
+        server.jar
+    shared
+        shared.jar

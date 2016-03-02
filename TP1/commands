@@ -1,0 +1,24 @@
+#!/bin/bash
+
+: './client create file1; 
+./client list; 
+./client lock file1; 
+./client list; 
+./client concat file1 bonour; 
+./client push file1;
+./client cat file1;
+./client list;'
+
+./client list;
+./client create fichier1;
+./client create fichier2;
+./client list;
+./client get fichier1;
+./client push fichier1;
+./client lock fichier1;
+./client list;
+./client push fichier1;
+./client list;
+ls;
+./client syncLocalDir;
+ls;

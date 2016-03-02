@@ -1,0 +1,5 @@
+pushd $(dirname $0) > /dev/null
+basepath=$(pwd)
+popd > /dev/null
+
+java -cp "$basepath"/deploy/cli/client.jar:"$basepath"/deploy/shared/shared.jar -Djava.security.policy="$basepath"/policy client.Client $*
