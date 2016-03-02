@@ -1,6 +1,8 @@
-package server;
+package shared;
 
-public class SubTask {
+import java.io.Serializable;
+
+public class SubTask implements Serializable {
 	private String operation;
 	private int operand;
 	

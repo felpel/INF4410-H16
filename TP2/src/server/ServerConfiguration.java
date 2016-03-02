@@ -3,12 +3,13 @@ package server;
 import com.google.gson.Gson;
 
 //TODO Try to validate parsed values ... does not work at the moment
-public class ServerConfiguration {	
+public class ServerConfiguration {
 	private int capacity; // voir p.5 ("Sim. des ressources")
-	private int malicious; // voir p.5 ("Serveur de calcul malicieux")
+	private int mischievious; // voir p.5 ("Serveur de calcul malicieux")
 	private int port; // voir p.8 ("Conseil pour le travail")
 	
 	public void setCapacity(int capacity) {
+		//TODO Maybe verify if between 0 and 10 (see specs)
 		this.capacity = capacity;
 	}
 	
@@ -16,18 +17,20 @@ public class ServerConfiguration {
 		return this.capacity;
 	}
 	
-	public void setMalicious(int malicious) {
-		this.malicious = malicious;
+	public void setMischievious(int mischievious) {
+		//TODO Maybe verify if between 0 and 100 (%)
+		this.mischievious = mischievious;
 	}
 	
-	public int getMalicious() {
-		return this.malicious;
+	public int getMischievious() {
+		return this.mischievious;
 	}
 	
 	public void setPort(int port) {
 		if (port < 5000 || port > 5500) {
 			throw new IllegalArgumentException("Port should be between 5000 and 5500");
 		}
+		
 		this.port = port;
 	}
 	
@@ -39,9 +42,9 @@ public class ServerConfiguration {
 		this(10, 0, 5000);
 	}
 	
-	public ServerConfiguration(int capacity, int malicious, int port) {
+	public ServerConfiguration(int capacity, int mischievious, int port) {
 		setCapacity(capacity);
-		setMalicious(malicious);
+		setMischievious(mischievious);
 		setPort(port);
 	}
 	

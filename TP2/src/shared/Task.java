@@ -1,8 +1,9 @@
-package server;
+package shared;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Task {
+public class Task implements Serializable {
 	public ArrayList<SubTask> subTasks;
 	
 	public ArrayList<SubTask> getSubTasks() {
