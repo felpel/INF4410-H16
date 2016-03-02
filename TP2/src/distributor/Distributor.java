@@ -1,4 +1,4 @@
-package distributor
+package distributor;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;

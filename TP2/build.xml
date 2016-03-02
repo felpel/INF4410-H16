@@ -25,7 +25,7 @@
 	</target>
 	<target depends="build-class" name="build-jar">
 		<jar destfile="deploy/srv/server.jar" basedir="bin" includes="server/**" update="false" />
-		<!--jar destfile="deploy/srv/server.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/server/**" update="false" />
-		<jar destfile="deploy/cli/client.jar" basedir="bin" includes="ca/polymtl/inf4410/tp1/client/**" update="false" /-->
+		<jar destfile="deploy/shared/shared.jar" basedir="bin" includes="shared/**" update="false" />
+		<jar destfile="deploy/dstr/distributor.jar" basedir="bin" includes="distributor/**" update="false" /-->
 	</target>
 </project>
