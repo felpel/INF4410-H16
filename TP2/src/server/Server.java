@@ -64,7 +64,7 @@ public class Server implements ServerInterface {
 		//TODO We can '//' the treatment between each servers
 		int tempResult = 0;
 		for (SubTask st : task.getSubTasks()) {
-			System.out.println(String.format("%s(%d)", st.getOperation(), st.getOperand()));
+			System.out.println(String.format("%s(%d)", st.getOperation(), st.getOperand())); //DEBUG
 			switch (st.getOperation()) {
 				case "fib":
 					tempResult += Operations.fib(st.getOperand());
@@ -79,6 +79,7 @@ public class Server implements ServerInterface {
 					break;
 			}
 		}
+		
 		return tempResult;
 	}
 }
