@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 public class Utilities {

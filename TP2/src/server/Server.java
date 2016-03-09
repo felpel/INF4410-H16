@@ -3,6 +3,13 @@ package server;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.rmi.RemoteException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.ConnectException;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
 
 import shared.*;
 
@@ -19,15 +26,21 @@ public class Server implements ServerInterface {
 			System.setSecurityManager(new SecurityManager());
 		}
 		
-		this.loadConfiguration();
-		this.loadServerInRegistry();
+		try {
+			this.loadConfiguration();
+			this.loadServerInRegistry();
+		} catch(IOException ioe) { 
+
+		}
+		catch(Exception e) {}
+		
 	}
 	
-	private void loadConfiguration() {
+	private void loadConfiguration() throws IOException {
 		this.loadConfiguration("srv-config.json");
 	}
 	
-	private void loadConfiguration(String filename) {
+	private void loadConfiguration(String filename) throws IOException {
 		this.serverConfiguration = 
 			Utilities.<ServerConfiguration>readJsonConfiguration(filename, ServerConfiguration.class);
 	}

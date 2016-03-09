@@ -1,5 +1,7 @@
 {
 	"secure" : true,
+	"batchSize" : 5,
+	"dataFilename" : "donnees-2317.txt",
 	"servers" : 
 	[
 		{

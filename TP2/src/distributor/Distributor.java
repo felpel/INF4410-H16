@@ -1,12 +1,18 @@
 package distributor;
 
 import java.io.FileNotFoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.AccessException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import shared.*;
 
@@ -15,13 +21,13 @@ public class Distributor {
 	List<ServerInterface> calculationServers = null;
 	
 	public static void main(String[] args) {
-		if (args == null || args[0] == null || args[0].trim().isEmpty)){
-			System.err.println("No filename was provided for the data. Program will exit.");
-			return;
-		}
-		
-		Distributor self = new Distributor();		
-		self.process(args[0]);
+		Distributor self = new Distributor();	
+
+		try {
+			self.process();
+		} catch(IOException ioe) {
+
+		} catch(Exception e) {}
 	}
 	
 	public Distributor() {
@@ -29,15 +35,21 @@ public class Distributor {
 			System.setSecurityManager(new SecurityManager());
 		}
 		
-		loadConfiguration();
-		loadServerStubs();
+
+		try {
+			loadConfiguration();
+			loadServerStubs();
+		} catch(IOException ioe) { 
+
+		}
+		catch(Exception e) {}
 	}
 	
-	private void loadConfiguration() {
+	private void loadConfiguration() throws IOException {
 		this.loadConfiguration("distributor-config.json");
 	}
 	
-	private void loadConfiguration(String filename) throws FileNotFoundException {
+	private void loadConfiguration(String filename) throws IOException {
 		this.configuration = 
 			Utilities.<DistributorConfiguration>readJsonConfiguration(filename, DistributorConfiguration.class);
 	}
@@ -50,12 +62,12 @@ public class Distributor {
 		
 		this.calculationServers = new ArrayList<ServerInterface>();
 		for (ServerInformation serverInfo : this.configuration.getServers()) {
-			ServerInterface stub = this.loadServerStub(serverInfo));
+			ServerInterface stub = this.loadServerStub(serverInfo);
 			this.calculationServers.add(stub);
 		}
 	}
 	
-	private void loadServerStub(ServerInformation serverInfo) {
+	private ServerInterface loadServerStub(ServerInformation serverInfo) {
 		ServerInterface stub = null;
 
         try {
@@ -72,8 +84,8 @@ public class Distributor {
         return stub;
 	}
 	
-	private void process(String filename) {
-		Task fullTask = this.readOperations(filename);
+	private void process() throws IOException {
+		Task fullTask = this.readOperations(this.configuration.getDataFilename());
 		
 		//When not secured, we need to ask all 3 servers for the results
 		//TODO Take full task and divide it in multiple tasks.

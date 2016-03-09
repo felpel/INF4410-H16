@@ -8,7 +8,7 @@ package server;
  * @author Simon Delisle et Francois Doray
  *
  */
-private class Operations {
+public class Operations {
 	
 	public static int fib(int x) {
 		if (x == 0)

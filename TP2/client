@@ -4,8 +4,6 @@ pushd $(dirname $0) > /dev/null
 basepath=$(pwd)
 popd > /dev/null
 
-java 
-	-cp "$basepath"/deploy/dstr/distributor.jar:\
-		"$basepath"/lib/gson-2.6.2.jar \ 
-		"$basepath"/deploy/shared/shared.jar \
+java \
+	-cp "$basepath"/deploy/dstr/distributor.jar:"$basepath"/lib/gson-2.6.2.jar:"$basepath"/deploy/shared/shared.jar \
 	-Djava.security.policy="$basepath"/policy distributor.Distributor $*
