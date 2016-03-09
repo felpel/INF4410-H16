@@ -4,12 +4,7 @@ pushd $(dirname $0) > /dev/null
 basepath=$(pwd)
 popd > /dev/null
 
-# Option a ajustet et ajouter pour lancer un serveur a distance.
-#  -Djava.rmi.server.hostname=mycomputer.example.com \
-
-java \ 
-    -cp "$basepath"/deploy/srv/server.jar: \
-		 "$basepath"/lib/gson-2.6.2.jar: \ 
-         "$basepath"/deploy/shared/shared.jar \
+java \
+    -cp "$basepath"/deploy/srv/server.jar:"$basepath"/lib/gson-2.6.2.jar:"$basepath"/deploy/shared/shared.jar \
     -Djava.rmi.server.codebase=file:"$basepath"/deploy/shared/shared.jar \
     -Djava.security.policy="$basepath"/policy server.Server \

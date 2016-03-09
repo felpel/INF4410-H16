@@ -51,19 +51,27 @@ public class Server implements ServerInterface {
 			return;
 		}
 		
+		ServerInterface stub = null;
+		Registry registry = null;
 		try {
-            ServerInterface stub = (ServerInterface) UnicastRemoteObject
+            stub = (ServerInterface) UnicastRemoteObject
                             .exportObject(this, serverConfiguration.getPort());
-
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind("server", stub);
+            registry = LocateRegistry.getRegistry("127.0.0.1", 5000);
+            Integer fuckyoujava = new Integer(serverConfiguration.getPort());
+            registry.rebind("server" + fuckyoujava.toString(), stub);
             System.out.println("Server ready.");
+            for (String s: registry.list()) {
+            	System.out.println(s);
+            }
         } catch (ConnectException e) {
             System.err.println("Impossible to connect to the RMI registry." + 
                                "Has rmiregistry [" + serverConfiguration.getPort() + "] been started ?");
             System.err.println();
             System.err.println("Error: " + e.getMessage());
         } catch (Exception e) {
+        	e.printStackTrace();
+        	
+
             System.err.println("Error: " + e.getMessage());
         }
 	}

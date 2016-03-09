@@ -11,14 +11,22 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 import shared.*;
 
 public class Distributor {
+	private static final int NB_WORKERS = 3;
 	private DistributorConfiguration configuration = null;
-	List<ServerInterface> calculationServers = null;
+	private List<ServerInterface> calculationServers = null;
+	//private ConcurrentLinkedQueue<Task> pendingTasks = null;
 	
 	public static void main(String[] args) {
 		Distributor self = new Distributor();	
@@ -26,7 +34,7 @@ public class Distributor {
 		try {
 			self.process();
 		} catch(IOException ioe) {
-
+			ioe.printStackTrace();
 		} catch(Exception e) {}
 	}
 	
@@ -71,8 +79,9 @@ public class Distributor {
 		ServerInterface stub = null;
 
         try {
-            Registry registry = LocateRegistry.getRegistry(serverInfo.getHost(), serverInfo.getPort());
-            stub = (ServerInterface) registry.lookup("server");
+            Registry registry = LocateRegistry.getRegistry(serverInfo.getHost(), 5000);
+            Integer fuckyoujava = new Integer(serverInfo.getPort());
+            stub = (ServerInterface) registry.lookup("server" + fuckyoujava.toString());
         } catch (NotBoundException e) {
             System.out.println("Error: The name '" + e.getMessage() + "' is not defined in the registry.");
         } catch (AccessException e) {
@@ -85,7 +94,18 @@ public class Distributor {
 	}
 	
 	private void process() throws IOException {
-		Task fullTask = this.readOperations(this.configuration.getDataFilename());
+		ExecutorService executor = Executors.newFixedThreadPool(NB_WORKERS);
+		
+		int result = 0;
+		//www.vogella.com/tutorials/JavaConcurrency/article.html#gainandissues
+		//Executors javadoc
+		//List<Future<int>> 
+		List<Task> tasks = this.readOperations("./donnees/" + this.configuration.getDataFilename());
+		for (Task t : tasks) {
+			result += this.calculationServers.get(0).process(t).uccess;
+		}
+
+		System.out.println(String.format("Result: \t%d", result % 5000));	
 		
 		//When not secured, we need to ask all 3 servers for the results
 		//TODO Take full task and divide it in multiple tasks.
@@ -95,9 +115,12 @@ public class Distributor {
 		//TODO Show aggregated result
 	}
 	
-	private Task readOperations(String filename) throws IOException {
+	private List<Task> readOperations(String filename) throws IOException {
+		List<Task> tasks = new ArrayList<Task>();
+
 		Path filePath = Paths.get(filename);
 		
+		System.out.println(filePath.toString());
 		if (!Files.exists(filePath)) {
 			throw new FileNotFoundException();
 		}
@@ -105,14 +128,18 @@ public class Distributor {
 		Charset cs = Charset.forName("utf-8");
 		List<String> instructions = Files.readAllLines(filePath, cs);
 		
-		Task task = new Task();
-		for (String instruction : instructions) {
-			String[] instructionElements = instruction.split(" ");
-			String operation = instructionElements[0];
-			int operand = Integer.parseInt(instructionElements[1]);
-			task.addSubTask(operation, operand);
+		for (int i = 0; i < instructions.size(); i += configuration.getBatchSize()) {
+			Task task = new Task();
+			for(int j = i; j < (this.configuration.getBatchSize() + i) && j < instructions.size(); j++) {
+				String instruction = instructions.get(j);
+				String[] instructionElements = instruction.split(" ");
+				String operation = instructionElements[0];
+				int operand = Integer.parseInt(instructionElements[1]);
+				task.addSubTask(operation, operand);
+			}
+			tasks.add(task);
 		}
 		
-		return task;
+		return tasks;
 	}
 }
