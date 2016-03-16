@@ -100,28 +100,6 @@ public abstract class Distributor {
 		return stub;
 	}
 
-	public void process() throws IOException {
-		//When not secured, we need to ask all 3 servers for the results
-		//TODO Take full task and divide it in multiple tasks.
-		//TODO Send tasks (list of operations) to servers even though
-		//we don't know each server's capacity.
-		//TODO Manage servers' failures
-		//TODO Show aggregated result
-
-		//TODO Check if we need other pre-conditions
-		if (this.calculationServers == null || this.calculationServers.isEmpty()) {
-			Utilities.logError("Can't calculate result since no servers were available...");
-			return;
-		}
-
-		//TODO Fix filename
-		this.readOperations("./donnees/" + this.configuration.getDataFilename());
-		
-		if (this.pendingTasks != null) {
-			this.nbTasks = this.pendingTasks.size();
-		}
-	}
-
 	private final void readOperations(String filename) throws IOException {
 		Path filePath = Paths.get(filename);
 
@@ -146,5 +124,48 @@ public abstract class Distributor {
 			}
 			this.pendingTasks.add(task);
 		}
+	}
+	
+	public void process() throws IOException {
+		//When not secured, we need to ask all 3 servers for the results
+		//TODO Take full task and divide it in multiple tasks.
+		//TODO Send tasks (list of operations) to servers even though
+		//we don't know each server's capacity.
+		//TODO Manage servers' failures
+		//TODO Show aggregated result
+
+		//TODO Check if we need other pre-conditions
+		if (this.calculationServers == null || this.calculationServers.isEmpty()) {
+			Utilities.logError("Can't calculate result since no servers were available...");
+			return;
+		}
+
+		//TODO Fix filename
+		this.readOperations("./donnees/" + this.configuration.getDataFilename());
+		
+		if (this.pendingTasks != null) {
+			this.nbTasks = this.pendingTasks.size();
+		}
+	}
+	
+	public final void getFinalResult() {
+		// !-- All tasks must be completed to get an appropriate result.
+		if (this.results == null || this.results.isEmpty()) {
+			Utilities.logError("Unable to get the final result since no results were provided.");
+			return;
+		}
+		
+		if (!this.pendingTasks.isEmpty() || this.doneTasks.size() != nbTasks) {
+			Utilities.logError("Unable to get the correct results because some tasks were not treated.");
+			return;
+		}
+
+		//Sum all results and apply modulo 5000
+		int finalResult = 0;
+		for (int result : this.results) {
+			finalResult += result;
+		}
+
+		Utilities.logInformation(String.format("Result = %d", finalResult % 5000));
 	}
 }

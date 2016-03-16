@@ -5,5 +5,7 @@ public final class NonSecureDistributor extends Distributor {
 		super.process();
 		
 		//TODO
+		
+		this.getFinalResult();
 	}
 }
