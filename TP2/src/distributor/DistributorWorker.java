@@ -12,7 +12,7 @@ public class DistributorWorker implements Runnable {
   public final int MAX_RETRY = 5;
 
   private int m_id = 0;
-  private AtomicInteger m_result = null;
+  private Queue<int> m_results = null;
   private ArrayList<Task> m_acquiredTasks = new ArrayList<Task>();
   private Queue<Task> m_pendingTasks = null;
   private Queue<Task> m_doneTasks = null;
@@ -20,12 +20,12 @@ public class DistributorWorker implements Runnable {
   private int m_retryCount = 0;
 
   public DistributorWorker(Queue<Task> pendingTasks, Queue<Task> doneTasks,
-                           ServerInterface serverStub, AtomicInteger result,
+                           ServerInterface serverStub, Queue<int> results,
                            int id) {
     m_pendingTasks = pendingTasks;
     m_doneTasks = doneTasks;
     m_serverStub = serverStub;
-    m_result = result;
+    m_results = results;
     m_id = id;
   }
 
@@ -38,7 +38,7 @@ public class DistributorWorker implements Runnable {
         Utilities.log(String.format("%sTrying to process task...\n%s", this.getLogPrefix(), t.toString(true)));
         int result = m_serverStub.process(t);
         Utilities.log(String.format("%sReceived result from task [%d] -> %d", this.getLogPrefix(), t.getId(), result));
-        m_result.addAndGet(result);
+        m_results.add(result);
         m_doneTasks.add(t);
       }
       catch (ServerTooBusyException stbe) {

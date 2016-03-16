@@ -1,83 +1,63 @@
 package distributor;
 
 import java.io.FileNotFoundException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.AccessException;
+import java.io.IOException;
+
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import shared.*;
 
-public class Distributor {
-	//private static final int NB_WORKERS = 3;
-	private DistributorConfiguration configuration = null;
-	private List<ServerInterface> calculationServers = null;
-	private Queue<Task> pendingTasks = null;
-	private Queue<Task> doneTasks = null;
-	private AtomicInteger result = null;
-
-	public static void main(String[] args) {
-		Distributor self = new Distributor();
-
-		try {
-			self.process();
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+public abstract class Distributor {
+	public final static int RMI_REGISTRY_PORT = 5000;
+	
+	protected DistributorConfiguration configuration = null;
+	protected List<ServerInterface> calculationServers = null;
+	protected Queue<Task> pendingTasks = null;
+	protected Queue<Task> doneTasks = null;
+	protected Queue<int> results = null;
+	protected int nbTasks = 0;
 
 	public Distributor() {
+		this.calculationServers = new ArrayList<ServerInterface>();
+		this.pendingTasks = new ConcurrentLinkedQueue<Task>();
+		this.doneTasks = new ConcurrentLinkedQueue<Task>();
+		this.results = new ConcurrentLinkedQueue<int>();	
+	}
+	
+	public final void initialize(DistributorConfiguration configuration) throws IllegalArgumentException {
+		if (configuration == null) {
+			throw new IllegalArgumentException("Configuration should not be null");
+		}
+		
+		this.configuration = configuration;
+		
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
-
-
-		try {
-			loadConfiguration();
-			loadServerStubs();
-			this.pendingTasks = new ConcurrentLinkedQueue<Task>();
-			this.doneTasks = new ConcurrentLinkedQueue<Task>();
-			this.result = new AtomicInteger(0);
-		} catch(IOException ioe) {
-
-		}
-		catch(Exception e) {}
+		
+		this.loadServerStubs();
 	}
 
-	private void loadConfiguration() throws IOException {
-		this.loadConfiguration("distributor-config.json");
-	}
-
-	private void loadConfiguration(String filename) throws IOException {
-		this.configuration =
-			Utilities.<DistributorConfiguration>readJsonConfiguration(filename, DistributorConfiguration.class);
-	}
-
-	private void loadServerStubs() {
+	private final void loadServerStubs() {
 		if (this.configuration == null) {
 			//TODO Maybe load default configuration?
 			return;
 		}
 
-		this.calculationServers = new ArrayList<ServerInterface>();
 		for (ServerInformation serverInfo : this.configuration.getServers()) {
 			ServerInterface stub = this.loadServerStub(serverInfo);
 			if (stub != null) {
@@ -86,24 +66,41 @@ public class Distributor {
 		}
 	}
 
-	private ServerInterface loadServerStub(ServerInformation serverInfo) {
+	private final ServerInterface loadServerStub(ServerInformation serverInfo) {
+		if (serverInfo == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		String host = serverInfo.getHost();
+		if (host == null || host.trim().isEmpty()) {
+			Utilities.logError("Unable to load server stub since the host is empty");
+			return null;
+		}
+		
+		int port = serverInfo.getPort();
+		
+		if (port < 5000 || port > 5050) {
+			Utilities.logError("Unable to load server stub since the port is not between the range [5000, 5050]");
+			return null;
+		}
+		
 		ServerInterface stub = null;
-    try {
-        Registry registry = LocateRegistry.getRegistry(serverInfo.getHost(), 5000);
-        String uniqueName = String.format("srv-%d", serverInfo.getPort());
-        stub = (ServerInterface) registry.lookup(uniqueName);
-    } catch (NotBoundException e) {
-        System.out.println("Error: The name '" + e.getMessage() + "' is not defined in the registry.");
-    } catch (AccessException e) {
-        System.out.println("Error: " + e.getMessage());
-    } catch (RemoteException e) {
-        System.out.println("Error: " + e.getMessage());
-    }
+		try {
+			Registry registry = LocateRegistry.getRegistry(host, RMI_REGISTRY_PORT);
+			String uniqueName = String.format("srv-%d", port);
+			stub = (ServerInterface) registry.lookup(uniqueName);
+		} catch (NotBoundException e) {
+			System.out.println("Error: The name '" + e.getMessage() + "' is not defined in the registry.");
+		} catch (AccessException e) {
+			System.out.println("Error: " + e.getMessage());
+		} catch (RemoteException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
 
-    return stub;
+		return stub;
 	}
 
-	private void process() throws IOException {
+	public void process() throws IOException {
 		//When not secured, we need to ask all 3 servers for the results
 		//TODO Take full task and divide it in multiple tasks.
 		//TODO Send tasks (list of operations) to servers even though
@@ -113,39 +110,19 @@ public class Distributor {
 
 		//TODO Check if we need other pre-conditions
 		if (this.calculationServers == null || this.calculationServers.isEmpty()) {
+			Utilities.logError("Can't calculate result since no servers were available...");
 			return;
 		}
 
 		//TODO Fix filename
 		this.readOperations("./donnees/" + this.configuration.getDataFilename());
-		int nbTasks = this.pendingTasks.size();
-
-		ExecutorService executor = Executors.newFixedThreadPool(this.calculationServers.size());
-
-		int workerCounter = 0;
-		for (ServerInterface serverStub : this.calculationServers) {
-			DistributorWorker worker = new DistributorWorker(this.pendingTasks, this.doneTasks, serverStub, this.result, workerCounter++);
-			executor.execute(worker);
+		
+		if (this.pendingTasks != null) {
+			this.nbTasks = this.pendingTasks.size();
 		}
-
-		//Wait for executor's full shutdown
-		executor.shutdown();
-		while(!executor.isTerminated()) {
-		}
-
-		// All tasks must be completed to get an appropriate result.
-		if (!this.pendingTasks.isEmpty() || this.doneTasks.size() != nbTasks) {
-			Utilities.log("Unable to get the correct results because some tasks were not treated.");
-			//TODO Log error
-			return;
-		}
-
-		this.result.set(this.result.get() % 5000);
-
-		Utilities.logInformation(String.format("Result = %d", this.result.get()));
 	}
 
-	private void readOperations(String filename) throws IOException {
+	private final void readOperations(String filename) throws IOException {
 		Path filePath = Paths.get(filename);
 
 		if (!Files.exists(filePath)) {
@@ -156,7 +133,7 @@ public class Distributor {
 		List<String> instructions = Files.readAllLines(filePath, cs);
 
 		//TODO Remove when we do benchmarks
-		Collections.shuffle(instructions);
+		java.util.Collections.shuffle(instructions);
 
 		for (int i = 0; i < instructions.size(); i += configuration.getBatchSize()) {
 			Task task = new Task(i / configuration.getBatchSize());
