@@ -11,11 +11,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.Queue;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -26,7 +28,9 @@ public class Distributor {
 	//private static final int NB_WORKERS = 3;
 	private DistributorConfiguration configuration = null;
 	private List<ServerInterface> calculationServers = null;
-	//private ConcurrentLinkedQueue<Task> pendingTasks = null;
+	private Queue<Task> pendingTasks = null;
+	private Queue<Task> doneTasks = null;
+	private AtomicInteger result = null;
 
 	public static void main(String[] args) {
 		Distributor self = new Distributor();
@@ -49,6 +53,9 @@ public class Distributor {
 		try {
 			loadConfiguration();
 			loadServerStubs();
+			this.pendingTasks = new ConcurrentLinkedQueue<Task>();
+			this.doneTasks = new ConcurrentLinkedQueue<Task>();
+			this.result = new AtomicInteger(0);
 		} catch(IOException ioe) {
 
 		}
@@ -73,47 +80,30 @@ public class Distributor {
 		this.calculationServers = new ArrayList<ServerInterface>();
 		for (ServerInformation serverInfo : this.configuration.getServers()) {
 			ServerInterface stub = this.loadServerStub(serverInfo);
-			this.calculationServers.add(stub);
+			if (stub != null) {
+				this.calculationServers.add(stub);
+			}
 		}
 	}
 
 	private ServerInterface loadServerStub(ServerInformation serverInfo) {
 		ServerInterface stub = null;
+    try {
+        Registry registry = LocateRegistry.getRegistry(serverInfo.getHost(), 5000);
+        String uniqueName = String.format("srv-%d", serverInfo.getPort());
+        stub = (ServerInterface) registry.lookup(uniqueName);
+    } catch (NotBoundException e) {
+        System.out.println("Error: The name '" + e.getMessage() + "' is not defined in the registry.");
+    } catch (AccessException e) {
+        System.out.println("Error: " + e.getMessage());
+    } catch (RemoteException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
 
-        try {
-            Registry registry = LocateRegistry.getRegistry(serverInfo.getHost(), 5000);
-            String uniqueName = String.format("srv-%d", serverInfo.getPort());
-            stub = (ServerInterface) registry.lookup(uniqueName);
-        } catch (NotBoundException e) {
-            System.out.println("Error: The name '" + e.getMessage() + "' is not defined in the registry.");
-        } catch (AccessException e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (RemoteException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        return stub;
+    return stub;
 	}
 
 	private void process() throws IOException {
-		//TODO Fix filename
-		List<Task> tasks = this.readOperations("./donnees/" + this.configuration.getDataFilename());
-		int result = this.processRecursive(tasks);
-		Utilities.logInformation(String.format("Result: \t%d", result % 5000));
-	}
-
-	private int processRecursive(List<Task> tasks) {
-		int result = 0;
-		if (tasks == null || tasks.isEmpty()) {
-			return result;
-		}
-
-		//ExecutorService executor = Executors.newFixedThreadPool(NB_WORKERS);
-
-		//www.vogella.com/tutorials/JavaConcurrency/article.html#gainandissues
-		//Executors javadoc
-		//List<Future<int>>
-
 		//When not secured, we need to ask all 3 servers for the results
 		//TODO Take full task and divide it in multiple tasks.
 		//TODO Send tasks (list of operations) to servers even though
@@ -121,30 +111,41 @@ public class Distributor {
 		//TODO Manage servers' failures
 		//TODO Show aggregated result
 
-		List<Task> refusedTasks = new ArrayList<Task>();
-
-		for (Task t : tasks) {
-			try {
-				result += this.calculationServers.get(0).process(t);
-				Utilities.log(String.format("Partial result:\t%d", result));
-			}
-			catch (ServerTooBusyException stbe){
-				Utilities.logError("Task was REFUSED!");
-				refusedTasks.add(t);
-			}
-			catch (RemoteException re) {
-				//TODO Probably notify distributor main of server failure
-				//TODO verify if server timed out
-			}
+		//TODO Check if we need other pre-conditions
+		if (this.calculationServers == null || this.calculationServers.isEmpty()) {
+			return;
 		}
 
-		Utilities.logInformation(String.format("Processing [%d] refused task(s), if there are any...", refusedTasks.size()));
-		return result + processRecursive(refusedTasks);
+		//TODO Fix filename
+		this.readOperations("./donnees/" + this.configuration.getDataFilename());
+		int nbTasks = this.pendingTasks.size();
+
+		ExecutorService executor = Executors.newFixedThreadPool(this.calculationServers.size());
+
+		int workerCounter = 0;
+		for (ServerInterface serverStub : this.calculationServers) {
+			DistributorWorker worker = new DistributorWorker(this.pendingTasks, this.doneTasks, serverStub, this.result, workerCounter++);
+			executor.execute(worker);
+		}
+
+		//Wait for executor's full shutdown
+		executor.shutdown();
+		while(!executor.isTerminated()) {
+		}
+
+		// All tasks must be completed to get an appropriate result.
+		if (!this.pendingTasks.isEmpty() || this.doneTasks.size() != nbTasks) {
+			Utilities.log("Unable to get the correct results because some tasks were not treated.");
+			//TODO Log error
+			return;
+		}
+
+		this.result.set(this.result.get() % 5000);
+
+		Utilities.logInformation(String.format("Result = %d", this.result.get()));
 	}
 
-	private List<Task> readOperations(String filename) throws IOException {
-		List<Task> tasks = new ArrayList<Task>();
-
+	private void readOperations(String filename) throws IOException {
 		Path filePath = Paths.get(filename);
 
 		if (!Files.exists(filePath)) {
@@ -154,8 +155,11 @@ public class Distributor {
 		Charset cs = Charset.forName("utf-8");
 		List<String> instructions = Files.readAllLines(filePath, cs);
 
+		//TODO Remove when we do benchmarks
+		Collections.shuffle(instructions);
+
 		for (int i = 0; i < instructions.size(); i += configuration.getBatchSize()) {
-			Task task = new Task();
+			Task task = new Task(i / configuration.getBatchSize());
 			for(int j = i; j < (this.configuration.getBatchSize() + i) && j < instructions.size(); j++) {
 				String instruction = instructions.get(j);
 				String[] instructionElements = instruction.split(" ");
@@ -163,9 +167,7 @@ public class Distributor {
 				int operand = Integer.parseInt(instructionElements[1]);
 				task.addSubTask(operation, operand);
 			}
-			tasks.add(task);
+			this.pendingTasks.add(task);
 		}
-
-		return tasks;
 	}
 }

@@ -7,4 +7,4 @@ popd > /dev/null
 java \
     -cp "$basepath"/deploy/srv/server.jar:"$basepath"/lib/gson-2.6.2.jar:"$basepath"/deploy/shared/shared.jar \
     -Djava.rmi.server.codebase=file:"$basepath"/deploy/shared/shared.jar \
-    -Djava.security.policy="$basepath"/policy server.Server \
+    -Djava.security.policy="$basepath"/policy server.Server $*\

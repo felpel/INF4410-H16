@@ -23,16 +23,21 @@ public class Server implements ServerInterface {
 	private final Random RAND = new Random();
 
 	public static void main(String[] args) {
-		Server self = new Server();
+		if (args.length == 0) {
+			Utilities.logError("Server ID was not provided.");
+			return;
+		}
+
+		Server self = new Server(Integer.parseInt(args[0]));
 	}
 
-	public Server() {
+	public Server(int id) {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
 
 		try {
-			this.loadConfiguration();
+			this.loadConfiguration(id);
 			this.loadServerInRegistry();
 		} catch(IOException ioe) {
 
@@ -41,8 +46,8 @@ public class Server implements ServerInterface {
 
 	}
 
-	private void loadConfiguration() throws IOException {
-		this.loadConfiguration("srv-config.json");
+	private void loadConfiguration(int id) throws IOException {
+		this.loadConfiguration(String.format("srv-config-%d.json", id));
 	}
 
 	private void loadConfiguration(String filename) throws IOException {
@@ -94,6 +99,7 @@ public class Server implements ServerInterface {
 	//VERY IMPORTANT TO HANDLE REMOTE EXCEPTION ON CLIENT SIDE ("Pannes intempestives")
 	public int process(Task task) throws RemoteException, ServerTooBusyException
 	{
+		Utilities.log("Received new task!\n" + task.toString());
 		if (!accepts(task)) {
 			throw new ServerTooBusyException("Unable to treat task, server is too busy.");
 		}
@@ -111,7 +117,7 @@ public class Server implements ServerInterface {
 		//TODO We can '//' the treatment between each servers
 		int tempResult = 0;
 		for (SubTask st : task.getSubTasks()) {
-			Utilities.log(String.format("%s(%d)", st.getOperation(), st.getOperand())); //DEBUG
+			Utilities.log(st.toString()); //DEBUG
 			switch (st.getOperation()) {
 				case "fib":
 					tempResult += Operations.fib(st.getOperand());
