@@ -33,8 +33,8 @@ public class Client {
 				distributor.initialize(configuration);
 				if (distributor.calculationServers != null &&
 						!distributor.calculationServers.isEmpty() &&
-						distributor.pendingTasks != null &&
-						!distributor.pendingTasks.isEmpty())
+						distributor.pendingOperations != null &&
+						!distributor.pendingOperations.isEmpty())
 				{
 					distributor.process();
 					distributor.showFinalResult();

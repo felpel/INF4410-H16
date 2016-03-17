@@ -9,16 +9,16 @@ public abstract class DistributorWorker implements Runnable {
   public final int MAX_RETRY = 5;
 
   protected Queue<Integer> m_results = null;
-  protected Queue<Task> m_pendingTasks = null;
+  protected Queue<Operation> m_pendingOperations = null;
   protected int m_id = 0;
   protected ServerInterface m_serverStub = null;
   protected int m_retryCount = 0;
 
-  public DistributorWorker(int id, ServerInterface serverStub, Queue<Integer> results, Queue<Task> pendingTasks) {
+  public DistributorWorker(int id, ServerInterface serverStub, Queue<Integer> results, Queue<Operation> pendingOperations) {
     m_id = id;
     m_serverStub = serverStub;
     m_results = results;
-    m_pendingTasks = pendingTasks;
+    m_pendingOperations = pendingOperations;
   }
 
   public abstract void run();
@@ -37,5 +37,4 @@ public abstract class DistributorWorker implements Runnable {
   protected final String getLogPrefix() {
     return String.format("[W%d] ", m_id);
   }
-
 }

@@ -1,29 +1,27 @@
 package shared;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
-public class Task implements Serializable {
+public class Task {
 	private int id;
-	private ArrayList<SubTask> subTasks;
+	private ArrayList<Operation> operations;
 
 	public int getId () {
 		return this.id;
 	}
 
-	public ArrayList<SubTask> getSubTasks() {
-		return this.subTasks;
+	public ArrayList<Operation> getOperations() {
+		return this.operations;
 	}
 
 	public Task(int id) {
 		this.id = id;
-		this.subTasks = new ArrayList<SubTask>();
+		this.operations = new ArrayList<Operation>();
 	}
 
-	public void addSubTask(String operation, int operand) {
-		SubTask st = new SubTask(operation, operand);
-		subTasks.add(st);
+	public void addOperation(String function, int operand) {
+		Operation op = new Operation(function, operand);
+		this.operations.add(op);
 	}
 
   @Override
@@ -35,12 +33,12 @@ public class Task implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		if (verbose) {
 			sb.append(String.format("Task [#%d]\n----------------------\n", this.id));
-			for(SubTask st : this.getSubTasks()) {
-				sb.append(String.format("-\t%s\n", st.toString()));
+			for(Operation op : this.getOperations()) {
+				sb.append(String.format("-\t%s\n", op.toString()));
 			}
 		}
 		else {
-			sb.append(String.format("Task #[%d] - %d operation(s)\n", this.id, this.getSubTasks().size()));
+			sb.append(String.format("Task #[%d] - %d operation(s)\n", this.id, this.getOperations().size()));
 		}
 		return sb.toString();
 	}

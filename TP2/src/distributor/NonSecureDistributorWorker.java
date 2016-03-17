@@ -7,8 +7,8 @@ import shared.*;
 public class NonSecureDistributorWorker extends DistributorWorker {
   private Task m_task = null;
 
-  public NonSecureDistributorWorker(Queue<Task> pendingTasks, ServerInterface serverStub, Queue<Integer> results, int id) {
-    super(id, serverStub, results, pendingTasks);
+  public NonSecureDistributorWorker(Queue<Operation> pendingOperations, ServerInterface serverStub, Queue<Integer> results, int id) {
+    super(id, serverStub, results, pendingOperations);
   }
 
   public final void assignTask(Task task) {
@@ -17,14 +17,13 @@ public class NonSecureDistributorWorker extends DistributorWorker {
     }
 
     m_task = task;
-    Utilities.log("lol");
   }
 
   @Override
   public void run() {
     boolean taskCompleted = false;
 
-    while (!m_pendingTasks.isEmpty() && m_retryCount < MAX_RETRY) {
+    while (/*!m_pendingTasks.isEmpty() &&*/ m_retryCount < MAX_RETRY) {
       try {
         while (m_task == null) {}
         this.tryAddResultFromServer(m_task);

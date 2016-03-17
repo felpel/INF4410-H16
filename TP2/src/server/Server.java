@@ -19,7 +19,6 @@ import shared.*;
 public class Server implements ServerInterface {
 	private final int MODULATOR = 5000;
 	private ServerConfiguration configuration = null;
-	private List<Task> pendingTasks = new ArrayList<Task>();
 	private final Random RAND = new Random();
 
 	public static void main(String[] args) {
@@ -66,7 +65,7 @@ public class Server implements ServerInterface {
 		try {
         stub = (ServerInterface) UnicastRemoteObject
                         .exportObject(this, configuration.getPort());
-        registry = LocateRegistry.getRegistry("127.0.0.1", 5000);
+        registry = LocateRegistry.getRegistry("127.0.0.1", Constants.RMI_REGISTRY_PORT);
 				String uniqueName = String.format("srv-%d", configuration.getPort());
         registry.rebind(uniqueName, stub);
         Utilities.logInformation("Server ready.");
@@ -111,24 +110,21 @@ public class Server implements ServerInterface {
 		}
 
 		Utilities.logInformation("Task should be treated!");
-		this.pendingTasks.add(task);
 
-		//TODO Verify if it is actually what we want
-		//TODO We can '//' the treatment between each servers
 		int tempResult = 0;
-		for (SubTask st : task.getSubTasks()) {
-			Utilities.log(st.toString()); //DEBUG
-			switch (st.getOperation()) {
+		for (Operation op : task.getOperations()) {
+			Utilities.log(op.toString());
+			switch (op.getFunction()) {
 				case "fib":
-					tempResult += Operations.fib(st.getOperand());
+					tempResult += Operations.fib(op.getOperand());
 					tempResult %= this.MODULATOR;
 				break;
 				case "prime":
-					tempResult += Operations.prime(st.getOperand());
+					tempResult += Operations.prime(op.getOperand());
 					tempResult %= this.MODULATOR;
 					break;
 				default:
-					Utilities.logError(String.format("Undefined operation '%s'", st.getOperation()));
+					Utilities.logError(String.format("Undefined function '%s'", op.getFunction()));
 					break;
 			}
 		}
@@ -136,34 +132,24 @@ public class Server implements ServerInterface {
 		Utilities.logInformation("Task was treated succesfully! :)");
 		Utilities.log(String.format("Result: %d", tempResult));
 
-		this.pendingTasks.remove(task);
-
 		return tempResult;
 	}
 
 	private boolean accepts(Task task) {
-			int nbPendingSubTasks = 0;
+			int newOperations = task.getOperations().size();
 
-			for (Task t : this.pendingTasks) {
-				nbPendingSubTasks += t.getSubTasks().size();
+			if (newOperations > Constants.MAX_OPERATIONS_PER_TASK) {
+				Utilities.logError(String.format("%s -> Impossible to treat task with > 100 operations", task.toString()));
+				return false;
 			}
-
-			int newSubTasks = task.getSubTasks().size();
 
 			int serverCapacity = this.configuration.getCapacity();
 
-			int serverLoad = 100 * nbPendingSubTasks / serverCapacity;
-
-			System.out.println("========== NEW TASK ==========");
-			String info = String.format("Pending subtasks:\t%d\n" +
-																	"New subtasks:\t%d\nServer load:\t%d%%",
-																	nbPendingSubTasks, newSubTasks, serverLoad);
-			System.out.println(info);
-			if (nbPendingSubTasks + newSubTasks <= serverCapacity)
+			if (newOperations <= serverCapacity)
 				return true;
 
 			//Verify if we have enough resources to treat the request (See "Simulation des ressources")
-			int refusalRate = (newSubTasks - serverCapacity) * 100 / (9 * serverCapacity);
+			int refusalRate = (newOperations - serverCapacity) * 100 / (9 * serverCapacity);
 			int randomNumber = RAND.nextInt(101);
 
 			Utilities.log(String.format("Refusal rate (T): %d %%\tRandom percent: %d %%", refusalRate, randomNumber));

@@ -18,24 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import shared.*;
 
 public abstract class Distributor {
-	public final static int RMI_REGISTRY_PORT = 5000;
-
 	protected DistributorConfiguration configuration = null;
 	protected List<ServerInterface> calculationServers = null;
-	protected Queue<Task> pendingTasks = null;
+	protected Queue<Operation> pendingOperations = null;
 	protected Queue<Task> doneTasks = null;
 	protected Queue<Integer> results = null;
-	protected int nbTasks = 0;
+	protected AtomicInteger nbTasksTried = null;
+	protected int nbOperations = 0;
 
 	public Distributor() {
 		this.calculationServers = new ArrayList<ServerInterface>();
-		this.pendingTasks = new ConcurrentLinkedQueue<Task>();
+		this.pendingOperations = new ConcurrentLinkedQueue<Operation>();
 		this.doneTasks = new ConcurrentLinkedQueue<Task>();
 		this.results = new ConcurrentLinkedQueue<Integer>();
+		this.nbTasksTried = new AtomicInteger(0);
 	}
 
 	public final void initialize(DistributorConfiguration configuration) throws IllegalArgumentException {
@@ -94,14 +95,14 @@ public abstract class Distributor {
 
 		int port = serverInfo.getPort();
 
-		if (port < 5000 || port > 5050) {
+		if (port < Constants.SERVER_MIN_PORT || port > Constants.SERVER_MAX_PORT) {
 			Utilities.logError("Unable to load server stub since the port is not between the range [5000, 5050]");
 			return null;
 		}
 
 		ServerInterface stub = null;
 		try {
-			Registry registry = LocateRegistry.getRegistry(host, RMI_REGISTRY_PORT);
+			Registry registry = LocateRegistry.getRegistry(host, Constants.RMI_REGISTRY_PORT);
 			String uniqueName = String.format("srv-%d", port);
 			stub = (ServerInterface) registry.lookup(uniqueName);
 		} catch (NotBoundException e) {
@@ -125,23 +126,15 @@ public abstract class Distributor {
 		Charset cs = Charset.forName("utf-8");
 		List<String> instructions = Files.readAllLines(filePath, cs);
 
-		//TODO Remove when we do benchmarks
-		java.util.Collections.shuffle(instructions);
-
-		for (int i = 0; i < instructions.size(); i += configuration.getBatchSize()) {
-			Task task = new Task(i / configuration.getBatchSize() + 1);
-			for(int j = i; j < (this.configuration.getBatchSize() + i) && j < instructions.size(); j++) {
-				String instruction = instructions.get(j);
-				String[] instructionElements = instruction.split(" ");
-				String operation = instructionElements[0];
-				int operand = Integer.parseInt(instructionElements[1]);
-				task.addSubTask(operation, operand);
-			}
-			this.pendingTasks.add(task);
+		for (String instruction : instructions) {
+			String[] instructionElements = instruction.split(" ");
+			String function = instructionElements[0];
+			int operand = Integer.parseInt(instructionElements[1]);
+			this.pendingOperations.add(new Operation(function, operand));
 		}
 
-		if (this.pendingTasks != null) {
-			this.nbTasks = this.pendingTasks.size();
+		if (this.pendingOperations != null) {
+			this.nbOperations = this.pendingOperations.size();
 		}
 	}
 
@@ -154,8 +147,13 @@ public abstract class Distributor {
 			return;
 		}
 
-		if (!this.pendingTasks.isEmpty() || this.doneTasks.size() != nbTasks) {
-			Utilities.logError("Unable to get the correct results because some tasks were not treated.");
+		int doneOperations = 0;
+		for (Task t : doneTasks) {
+			doneOperations += t.getOperations().size();
+		}
+
+		if (!this.pendingOperations.isEmpty() || doneOperations != nbOperations) {
+			Utilities.logError("Unable to get the correct results because some operations were not treated.");
 			return;
 		}
 
