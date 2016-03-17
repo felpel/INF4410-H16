@@ -7,9 +7,7 @@ import java.util.Queue;
 import shared.*;
 
 public class SecureDistributorWorker extends DistributorWorker {
-  private int m_id = 0;
   private List<Task> m_acquiredTasks = null;
-  private Queue<Task> m_pendingTasks = null;
   private Queue<Task> m_doneTasks = null;
 
   public SecureDistributorWorker(Queue<Task> pendingTasks, Queue<Task> doneTasks,
