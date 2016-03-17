@@ -6,14 +6,14 @@ import shared.*;
 
 public class Client {
 	public static final String DEFAULT_CONFIGURATION = "distributor-config.json";
-	
+
 	public static void main(String[] args) {
 		DistributorConfiguration configuration = null;
 		Distributor distributor = null;
-		
+
 		try {
-			configuration = this.loadConfiguration();
-		} 
+			configuration = Client.loadConfiguration();
+		}
 		catch (IOException ioe) {
 			Utilities.logError(ioe.getMessage());
 		}
@@ -22,22 +22,34 @@ public class Client {
 				Utilities.logError("Unable to retrieve properly the distributor's configuration");
 				return;
 			}
-			
+
 			distributor = configuration.getSecure() ?
 										new SecureDistributor() :
 										new NonSecureDistributor();
 		}
-		
+
 		if (distributor != null) {
-			distributor.initialize(configuration);
-			distributor.process();
+			try {
+				distributor.initialize(configuration);
+				if (distributor.calculationServers != null &&
+						!distributor.calculationServers.isEmpty() &&
+						distributor.pendingTasks != null &&
+						!distributor.pendingTasks.isEmpty())
+				{
+					distributor.process();
+					distributor.showFinalResult();
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	private static DistributorConfiguration loadConfiguration() throws IOException {
-		return this.loadConfiguration(DEFAULT_CONFIGURATION);
+		return Client.loadConfiguration(DEFAULT_CONFIGURATION);
 	}
-	
+
 	private static DistributorConfiguration loadConfiguration(String filename) throws IOException {
 		return Utilities.<DistributorConfiguration>readJsonConfiguration(filename, DistributorConfiguration.class);
 	}

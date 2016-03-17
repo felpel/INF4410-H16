@@ -1,5 +1,6 @@
 package shared;
 
+@SuppressWarnings("serial")
 public class ServerTooBusyException extends Exception {
   public ServerTooBusyException() { super(); }
   public ServerTooBusyException(String message) { super(message); }

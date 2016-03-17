@@ -3,6 +3,7 @@ package shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class Task implements Serializable {
 	private int id;
 	private ArrayList<SubTask> subTasks;

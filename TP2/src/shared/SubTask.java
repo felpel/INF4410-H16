@@ -2,6 +2,7 @@ package shared;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class SubTask implements Serializable {
 	private String operation;
 	private int operand;
