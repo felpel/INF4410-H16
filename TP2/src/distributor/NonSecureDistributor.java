@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,77 +16,79 @@ import shared.*;
 
 public final class NonSecureDistributor extends Distributor {
 
+	private int m_projectedServerCapacity = 1;
 	private ExecutorService m_executor = null;
 
-	public void process() {
-		int workerCounter = 0;
+	@Override
+	public final void process() {
+		List<Operation> operations = null;
+		ExecutorService executor = null;
 
-		Queue<Integer> resultsForTask = new ConcurrentLinkedQueue<Integer>();
-		List<NonSecureDistributorWorker> workers = new ArrayList<NonSecureDistributorWorker>();
+		while(this.pendingOperations.peek() != null) {
 
-		this.m_executor = Executors.newFixedThreadPool(this.calculationServers.size());
-
-		for (ServerInterface serverStub : this.calculationServers) {
-			NonSecureDistributorWorker w = new NonSecureDistributorWorker(this.pendingTasks, serverStub, resultsForTask, ++workerCounter);
-			workers.add(w);
-			this.m_executor.execute(w);
-		}
-
-		for (Task t : this.pendingTasks) {
-			this.treatTask(t, workers, resultsForTask);
-		}
-	}
-
-	private final void treatTask(Task t, List<NonSecureDistributorWorker> workers, Queue<Integer> resultsForTask) {
-		for (NonSecureDistributorWorker worker : workers) {
-			worker.assignTask(t);
-		}
-
-		// Wait for results
-		while (resultsForTask.size() != workers.size()) {
-			try {
-					Thread.sleep(1000);
-			}
-			catch (InterruptedException ie) { // Do nothing
-			}
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("occurrences:\n");
-		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
-
-		// Count occurrences of each result, we take the one who appeared the most
-		for (Integer result : resultsForTask) {
-			sb.append(result + ", ");
-			if (!occurences.containsKey(result)) {
-				occurences.put(result, 1);
-			} else {
-				Integer occurencesForResult = occurences.get(result);
-				occurencesForResult++;
-			}
-		}
-
-		Utilities.log(sb.substring(0, sb.length() - 2));
-
-		Integer finalResult = Collections.max(
-			occurences.entrySet(),
-			new Comparator<Entry<Integer, Integer>>() {
-				@Override
-				public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
-					return o1.getValue() > o2.getValue() ?
-						1 : -1;
+			operations = new ArrayList<Operation>();
+			for (int i = 0; i < this.m_projectedServerCapacity; i++) {
+				Operation op = this.pendingOperations.poll();
+				if (op != null) {
+					operations.add(op);
 				}
-			}).getKey();
+			}
 
-		Utilities.log(String.format("Final result:\t%d", finalResult));
+			int finalResult = 0;
+			boolean majorityDetermined = false;
 
-		this.results.add(finalResult);
-		resultsForTask.clear();
+			while(!majorityDetermined) {
+				Queue<Integer> resultsForTask = new ConcurrentLinkedQueue<Integer>();
 
-		/*//Wait for executor's full shutdown
-		executor.shutdownNow();
-		while(!executor.isTerminated()) {
-			System.out.println("Shutdown...");
-		}*/
+				executor = Executors.newFixedThreadPool(this.calculationServers.size());
+
+				int workerCounter = 0;
+				for (ServerInterface serverStub : this.calculationServers) {
+					NonSecureDistributorWorker worker = new NonSecureDistributorWorker(operations, serverStub, resultsForTask, ++workerCounter, this.nbTasksTried);
+					executor.execute(worker);
+				}
+
+				//Wait for executor's full shutdown
+				executor.shutdown();
+				while(!executor.isTerminated()) {
+				}
+
+				if (resultsForTask.size() == this.calculationServers.size()) {
+					this.m_projectedServerCapacity++;
+					majorityDetermined = true;
+					Map<Integer, Integer> occurencesForResult = new HashMap<Integer, Integer>();
+
+					for (Integer result : resultsForTask) {
+						if (!occurencesForResult.containsKey(result)) {
+							occurencesForResult.put(result, 1);
+						} else {
+							Integer count = occurencesForResult.get(result);
+							occurencesForResult.put(result, ++count);
+						}
+					}
+
+					finalResult = Collections.max(
+                        occurencesForResult.entrySet(),
+                        new Comparator<Entry<Integer,Integer>>(){
+                            @Override
+                            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+                                return o1.getValue() > o2.getValue()? 1 : -1;
+                            }
+                        }).getKey();
+				}
+			}
+
+			if (majorityDetermined) {
+				this.results.add(finalResult);
+
+				Task t = new Task(0);
+
+				for(Operation op : operations) {
+					t.addOperation(op);
+				}
+
+				this.doneTasks.add(t);
+			}
+		}
 	}
 }

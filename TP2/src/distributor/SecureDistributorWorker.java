@@ -10,6 +10,7 @@ import shared.*;
 
 public class SecureDistributorWorker extends DistributorWorker {
   private Queue<Task> m_doneTasks = null;
+  private int m_projectedServerCapacity = 1;
 
   public SecureDistributorWorker(Queue<Operation> pendingOperations, Queue<Task> doneTasks,
                            ServerInterface serverStub, Queue<Integer> results,

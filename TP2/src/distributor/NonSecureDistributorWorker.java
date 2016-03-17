@@ -1,38 +1,33 @@
 package distributor;
 
+import java.util.List;
 import java.util.Queue;
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicInteger;
 import shared.*;
 
 public class NonSecureDistributorWorker extends DistributorWorker {
-  private Task m_task = null;
+  private List<Operation> m_operations = null;
 
-  public NonSecureDistributorWorker(Queue<Operation> pendingOperations, ServerInterface serverStub, Queue<Integer> results, int id) {
-    super(id, serverStub, results, pendingOperations);
-  }
+  public NonSecureDistributorWorker(List<Operation> operations, ServerInterface serverStub, Queue<Integer> results, int id, AtomicInteger nbTasksTried) {
+    super(id, serverStub, results, null, nbTasksTried);
 
-  public final void assignTask(Task task) {
-    if (task == null) {
-      throw new IllegalArgumentException(this.getLogPrefix() + "Cannot assign a null task");
-    }
-
-    m_task = task;
+    this.m_operations = operations;
   }
 
   @Override
   public void run() {
-    boolean taskCompleted = false;
 
-    while (/*!m_pendingTasks.isEmpty() &&*/ m_retryCount < MAX_RETRY) {
-      try {
-        while (m_task == null) {}
-        this.tryAddResultFromServer(m_task);
-        m_task = null;
-        m_retryCount = 0;
+    try {
+      if (!this.m_operations.isEmpty()) {
+        this.tryAddResultFromServer(this.m_operations);
       }
-      catch (ServerTooBusyException | RemoteException e) {
-        Utilities.log(String.format("%sRetry count: %d", this.getLogPrefix(), ++m_retryCount));
-      }
+    }
+    catch (ServerTooBusyException stbe) {
+      Utilities.logError(String.format("%sTask was REFUSED!", this.getLogPrefix()));
+    }
+    catch (RemoteException re) {
+      Utilities.logError(re.getMessage());
     }
 
     this.finish();

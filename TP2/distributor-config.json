@@ -1,5 +1,5 @@
 {
-	"secure" : true,
+	"secure" : false,
 	"dataFilename" : "donnees-xxx.txt",
 	"servers" :
 	[
