@@ -5,17 +5,17 @@
 		<pathelement location="bin" />
 		<pathelement location="lib/gson-2.6.2.jar"/>
 	</path>
-	<target name="init">
+	<target name="clean">
+		<delete dir="bin" />
+		<delete dir="deploy" />
+	</target>
+	<target depends="clean" name="init">
 		<mkdir dir="bin" />
 		<copy includeemptydirs="false" todir="bin">
 			<fileset dir="src">
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
-	</target>
-	<target name="clean">
-		<delete dir="bin" />
-		<delete dir="deploy" />
 	</target>
 	<target depends="init" name="build-class">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false">

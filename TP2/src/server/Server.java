@@ -82,6 +82,7 @@ public class Server implements ServerInterface {
 	}
 
 	private void logServerInformation(String name) {
+		Utilities.log("=============================================");
 		Utilities.log(String.format("Name:\t\t%s", name));
 		if (this.configuration != null) {
 			Utilities.log(String.format("Port:\t\t%s", this.configuration.getPort()));
@@ -92,7 +93,10 @@ public class Server implements ServerInterface {
 			}
 
 			Utilities.log(String.format("Capacity:\t%d task(s)", this.configuration.getCapacity()));
+		} else {
+			Utilities.logError("Configuration is missing.");
 		}
+		Utilities.log("=============================================\n");
 	}
 
 	//VERY IMPORTANT TO HANDLE REMOTE EXCEPTION ON CLIENT SIDE ("Pannes intempestives")
@@ -100,20 +104,20 @@ public class Server implements ServerInterface {
 	{
 		Utilities.log("Received new task!\n" + task.toString());
 		if (!accepts(task)) {
+			Utilities.logInformation("Task was refused :(");
 			throw new ServerTooBusyException("Unable to treat task, server is too busy.");
 		}
 
 		if (isMischievious()) {
-				//TODO Verify if we actually want to do this even when distributor is in secure mode
-				//or if we simply set the mischievous rate to 0
+				Utilities.logInformation("Mischievous activity detected :>");
 				return RAND.nextInt(Integer.MAX_VALUE % 5000);
 		}
 
-		Utilities.logInformation("Task should be treated!");
+		Utilities.logInformation("Processing task!");
 
 		int tempResult = 0;
 		for (Operation op : task.getOperations()) {
-			Utilities.log(op.toString());
+			Utilities.logInformation(op.toString());
 			switch (op.getFunction()) {
 				case "fib":
 					tempResult += Operations.fib(op.getOperand());
@@ -129,8 +133,8 @@ public class Server implements ServerInterface {
 			}
 		}
 
-		Utilities.logInformation("Task was treated succesfully! :)");
-		Utilities.log(String.format("Result: %d", tempResult));
+		Utilities.logInformation("Task done :)");
+		Utilities.log(String.format("Result: %d\n", tempResult));
 
 		return tempResult;
 	}

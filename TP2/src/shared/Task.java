@@ -1,8 +1,11 @@
 package shared;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 
-public class Task {
+//@SuppressWarnings("serial")
+public class Task implements Serializable {
 	private int id;
 	private ArrayList<Operation> operations;
 
@@ -17,6 +20,10 @@ public class Task {
 	public Task(int id) {
 		this.id = id;
 		this.operations = new ArrayList<Operation>();
+	}
+
+	public void addOperation(Operation op) {
+		this.addOperation(op.getFunction(), op.getOperand());
 	}
 
 	public void addOperation(String function, int operand) {
@@ -38,7 +45,7 @@ public class Task {
 			}
 		}
 		else {
-			sb.append(String.format("Task #[%d] - %d operation(s)\n", this.id, this.getOperations().size()));
+			sb.append(String.format("Task #[%d] - %d operation(s)", this.id, this.getOperations().size()));
 		}
 		return sb.toString();
 	}

@@ -12,7 +12,7 @@ public final class SecureDistributor extends Distributor {
 
 		int workerCounter = 0;
 		for (ServerInterface serverStub : this.calculationServers) {
-			DistributorWorker worker = new SecureDistributorWorker(this.pendingOperations, this.doneTasks, serverStub, this.results, ++workerCounter);
+			DistributorWorker worker = new SecureDistributorWorker(this.pendingOperations, this.doneTasks, serverStub, this.results, ++workerCounter, this.nbTasksTried);
 			executor.execute(worker);
 		}
 

@@ -63,7 +63,7 @@ public abstract class Distributor {
 			this.readOperations("./donnees/" + this.configuration.getDataFilename());
 		}
 		catch (IOException ioe){
-			Utilities.logError("Unable to read the distributor's configuration...");
+			Utilities.logError("Unable to read the operations' file...");
 			return;
 		}
 	}

@@ -1,6 +1,9 @@
 package shared;
 
-public class Operation {
+import java.io.Serializable;
+
+//@SuppressWarnings("serial")
+public class Operation implements Serializable {
 	private String function;
 	private int operand;
 
