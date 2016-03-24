@@ -10,7 +10,7 @@ import shared.*;
 public abstract class DistributorWorker implements Runnable {
   public final int MAX_RETRY = 5;
 
-  protected Queue<Integer> m_results = null;
+  protected Queue<ServerResult> m_results = null;
   protected Queue<Operation> m_pendingOperations = null;
   protected int m_id = 0;
   protected ServerInterface m_serverStub = null;
@@ -18,7 +18,7 @@ public abstract class DistributorWorker implements Runnable {
   protected int m_projectedServerCapacity = 1;
   protected AtomicInteger m_nbTasksTried = null;
 
-  public DistributorWorker(int id, ServerInterface serverStub, Queue<Integer> results, Queue<Operation> pendingOperations, AtomicInteger nbTasksTried) {
+  public DistributorWorker(int id, ServerInterface serverStub, Queue<ServerResult> results, Queue<Operation> pendingOperations, AtomicInteger nbTasksTried) {
     m_id = id;
     m_serverStub = serverStub;
     m_results = results;
@@ -28,20 +28,29 @@ public abstract class DistributorWorker implements Runnable {
 
   public abstract void run();
 
-  public final Task tryAddResultFromServer(List<Operation> operations) throws RemoteException, ServerTooBusyException {
+  public final Task createTask(List<Operation> operations) {
     Task t = new Task(this.m_nbTasksTried.incrementAndGet());
     for (Operation op : operations) {
       t.addOperation(op);
     }
-    this.tryAddResultFromServer(t);
     return t;
   }
 
-  private void tryAddResultFromServer(Task t) throws RemoteException, ServerTooBusyException {
+  public final ServerResult tryAddResultFromServer(Task t) {
     Utilities.log(String.format("%sTrying to process task...\n%s", this.getLogPrefix(), t.toString(true)));
-    int result = m_serverStub.process(t);
-    Utilities.log(String.format("%sReceived result from task [%d] -> %d", this.getLogPrefix(), t.getId(), result));
-    m_results.add(result);
+
+    ServerResult sResult = new ServerResult();
+    try {
+      sResult.setResult(m_serverStub.process(t));
+      Utilities.log(String.format("%sReceived result from task [%d] -> %d", this.getLogPrefix(), t.getId(), sResult.getResult()));
+    } catch(ServerTooBusyException stbe) {
+      sResult.setFailure(stbe);
+    } catch(RemoteException re) {
+      sResult.setFailure(re);
+    }
+
+    m_results.add(sResult);
+    return sResult;
   }
 
   public void finish() {

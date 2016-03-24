@@ -27,7 +27,7 @@ public abstract class Distributor {
 	protected List<ServerInterface> calculationServers = null;
 	protected Queue<Operation> pendingOperations = null;
 	protected Queue<Task> doneTasks = null;
-	protected Queue<Integer> results = null;
+	protected Queue<ServerResult> results = null;
 	protected AtomicInteger nbTasksTried = null;
 	protected int nbOperations = 0;
 
@@ -35,7 +35,7 @@ public abstract class Distributor {
 		this.calculationServers = new ArrayList<ServerInterface>();
 		this.pendingOperations = new ConcurrentLinkedQueue<Operation>();
 		this.doneTasks = new ConcurrentLinkedQueue<Task>();
-		this.results = new ConcurrentLinkedQueue<Integer>();
+		this.results = new ConcurrentLinkedQueue<ServerResult>();
 		this.nbTasksTried = new AtomicInteger(0);
 	}
 
@@ -159,8 +159,8 @@ public abstract class Distributor {
 
 		//Sum all results and apply modulo 5000
 		int finalResult = 0;
-		for (int result : this.results) {
-			finalResult += result;
+		for (ServerResult sr : this.results) {
+			finalResult += sr.getResult();
 		}
 
 		Utilities.logInformation(String.format("Result = %d", finalResult % 5000));

@@ -109,8 +109,10 @@ public class Server implements ServerInterface {
 		}
 
 		if (isMischievious()) {
-				Utilities.logInformation("Mischievous activity detected :>");
-				return RAND.nextInt(Integer.MAX_VALUE % 5000);
+				Utilities.logInformation("Mischievous activity detected :>\n");
+				int rndm = RAND.nextInt(Integer.MAX_VALUE % 5000);
+				Utilities.logInformation("Mischievous result is  : " + rndm + "\n");
+				return rndm;
 		}
 
 		Utilities.logInformation("Processing task!");

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.Map;
+import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +25,7 @@ public final class NonSecureDistributor extends Distributor {
 		List<Operation> operations = null;
 		ExecutorService executor = null;
 
-		while(this.pendingOperations.peek() != null) {
+		while(this.pendingOperations.peek() != null && this.calculationServers.size() > 1) {
 
 			operations = new ArrayList<Operation>();
 			for (int i = 0; i < this.m_projectedServerCapacity; i++) {
@@ -36,9 +37,10 @@ public final class NonSecureDistributor extends Distributor {
 
 			int finalResult = 0;
 			boolean majorityDetermined = false;
+			Map<Integer, Integer> pastResults = new HashMap<Integer, Integer>();
 
 			while(!majorityDetermined) {
-				Queue<Integer> resultsForTask = new ConcurrentLinkedQueue<Integer>();
+				Queue<ServerResult> resultsForTask = new ConcurrentLinkedQueue<ServerResult>();
 
 				executor = Executors.newFixedThreadPool(this.calculationServers.size());
 
@@ -53,34 +55,100 @@ public final class NonSecureDistributor extends Distributor {
 				while(!executor.isTerminated()) {
 				}
 
-				if (resultsForTask.size() == this.calculationServers.size()) {
+				int resultsCount = 0;
+				int threshold = 0;
+				boolean loadTooBig = false;
+				for(ServerResult sr : resultsForTask) {
+						if(sr.getResult() != null) {
+							resultsCount++;
+						}
+
+						Exception failure = sr.getFailure();
+						if (!loadTooBig && failure != null && failure instanceof ServerTooBusyException) {
+							Utilities.log("Server was too busy");
+							//TODO
+							loadTooBig = true;
+						}
+
+						if (failure != null && failure instanceof RemoteException) {
+							//TODO
+							Utilities.log("RemoteException from server X");
+						}
+				}
+
+				threshold = resultsCount/2 + 1;
+
+				if (resultsCount == this.calculationServers.size()) {
 					this.m_projectedServerCapacity++;
-					majorityDetermined = true;
+				}
+
+				if (loadTooBig && this.m_projectedServerCapacity > 1) {
+					this.m_projectedServerCapacity--;
+				}
+
+				if (resultsCount > 1) {
 					Map<Integer, Integer> occurencesForResult = new HashMap<Integer, Integer>();
 
-					for (Integer result : resultsForTask) {
-						if (!occurencesForResult.containsKey(result)) {
-							occurencesForResult.put(result, 1);
+					for (ServerResult sr : resultsForTask) {
+						if (sr.getResult() == null) {
+							continue;
+						}
+
+						if (!occurencesForResult.containsKey(sr.getResult())) {
+							occurencesForResult.put(sr.getResult(), 1);
 						} else {
-							Integer count = occurencesForResult.get(result);
-							occurencesForResult.put(result, ++count);
+							Integer count = occurencesForResult.get(sr.getResult());
+							occurencesForResult.put(sr.getResult(), ++count);
 						}
 					}
 
-					finalResult = Collections.max(
+					Entry<Integer, Integer> potentialResult = Collections.max(
                         occurencesForResult.entrySet(),
                         new Comparator<Entry<Integer,Integer>>(){
                             @Override
                             public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
                                 return o1.getValue() > o2.getValue()? 1 : -1;
                             }
-                        }).getKey();
+                        });
+
+					if (potentialResult.getValue() >= threshold) {
+						majorityDetermined = true;
+						finalResult = potentialResult.getKey();
+					}
+					else {
+						boolean hasPastResults = pastResults.size() != 0;
+
+						for(Entry<Integer, Integer> newResult : occurencesForResult.entrySet()) {
+							Integer updatedCount = newResult.getValue();
+							if (pastResults.containsKey(newResult.getKey())) {
+								updatedCount += pastResults.get(newResult.getKey());
+							}
+							pastResults.put(newResult.getKey(), updatedCount);
+						}
+
+						if (hasPastResults) {
+							Entry<Integer, Integer> potentialEntry = Collections.max(
+		                        pastResults.entrySet(),
+		                        new Comparator<Entry<Integer,Integer>>(){
+		                            @Override
+		                            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+		                                return o1.getValue() > o2.getValue()? 1 : -1;
+		                            }
+		                        });
+							if (potentialEntry.getValue() > 1) {
+								finalResult = potentialEntry.getKey();
+								majorityDetermined = true;
+							}
+						}
+					}
 				}
 			}
 
 			if (majorityDetermined) {
-				this.results.add(finalResult);
-
+				ServerResult sr = new ServerResult();
+				sr.setResult(finalResult);
+				this.results.add(sr);
+				Utilities.logInformation(String.format("Majority result is : %d\n", finalResult));
 				Task t = new Task(0);
 
 				for(Operation op : operations) {
