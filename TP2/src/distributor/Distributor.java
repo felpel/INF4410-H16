@@ -140,7 +140,7 @@ public abstract class Distributor {
 
 	public abstract void process();
 
-	public final void showFinalResult() {
+	public final void showFinalResult(long duration) {
 		// !-- All tasks must be completed to get an appropriate result.
 		if (this.results == null || this.results.isEmpty()) {
 			Utilities.logError("Unable to get the final result since no results were provided.");
@@ -160,9 +160,12 @@ public abstract class Distributor {
 		//Sum all results and apply modulo 5000
 		int finalResult = 0;
 		for (ServerResult sr : this.results) {
-			finalResult += sr.getResult();
+			Integer result = sr.getResult();
+			if (result != null) {
+				finalResult += result;
+			}
 		}
 
-		Utilities.logInformation(String.format("Result = %d", finalResult % 5000));
+		Utilities.logInformation(String.format("Result = %d\tTime elapsed = %s ms", finalResult % 5000, Double.toString(duration * Math.pow(10, -6))));
 	}
 }

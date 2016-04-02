@@ -11,6 +11,7 @@ import shared.*;
 public class SecureDistributorWorker extends DistributorWorker {
   private Queue<Task> m_doneTasks = null;
   private int m_projectedServerCapacity = 1;
+  private int m_rejectedTasks = 0;
 
   public SecureDistributorWorker(Queue<Operation> pendingOperations, Queue<Task> doneTasks,
                            ServerInterface serverStub, Queue<ServerResult> results,
@@ -41,6 +42,7 @@ public class SecureDistributorWorker extends DistributorWorker {
         }
         else if (sr.getFailure() instanceof ServerTooBusyException) {
           Utilities.logError(String.format("%sTask was REFUSED!", this.getLogPrefix()));
+          this.m_rejectedTasks++;
 
           // Put tasks in queue if it could not be completed
           for (Operation undoneOperation : operations) {
@@ -66,5 +68,10 @@ public class SecureDistributorWorker extends DistributorWorker {
       }
     }
     this.finish();
+  }
+
+  public void finish() {
+    super.finish();
+    Utilities.logInformation(String.format("%s %d task(s) were refused.", this.getLogPrefix(), this.m_rejectedTasks));
   }
 }
