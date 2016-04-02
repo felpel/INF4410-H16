@@ -1,0 +1,107 @@
+Félix Pelletier       1581243   felix.pelletier@polymtl.ca
+Jean-Frédéric Faust   1583921   jean-frederic.faust@polymtl.ca
+
+INSTRUCTIONS (LIRE ATTENTIVEMENT)
+
+1. Dezipper l'archive.
+2. Rendez-vous au répertoire où l'archive est dézippée.
+3. Ouvrez un terminal et entrer la commande "ant".
+4. Ouvrez trois autres terminaux.
+5. Sur chacun d'entre eux:
+      - connectez-vous en SSH de la même manière qu'il est spécifié dans les consignes du TP.
+      - dirigez-vous au répertoire où l'archive a été dézippée, puis dans le répertoire "bin"
+      - démarrez un registre RMI sur le port 5000 avec "rmiregistry 5000 &". Faites "cd..".
+      - démarrez un serveur avec "./server x" où "x" représente l'identifiant du serveur (1 à 3)
+
+      Si tout ce déroule comme il le faut, vous devriez voir quelque chose de semblable à la console:
+
+      ./server 1
+      > Loading configuration [class server.ServerConfiguration]
+      > {"capacity":8,"mischievious":0,"port":5001}
+      ---> Server ready.
+      > =============================================
+      > Name:		srv-5001
+      > Host:		"127.0.0.1"
+      > Port:		5001
+      > Server is not mischievous (0%).
+      > Capacity:	8 task(s)
+      > =============================================
+
+6. Lorsque les serveurs sont opérationnels, il suffit simplement d'entrer "./client" sur le 4e terminal.
+7. Dépendemment du mode choisi et  des pannes, un affichage personnalisé sera affiché sur le terminal du client.
+
+La configuration du distributeur respecte cette structure:
+
+{
+	"secure" : true,
+	"dataFilename" : "donnees-2317.txt",
+	"servers" :
+	[
+		{
+			"host" : "127.0.0.1",
+			"port" : "5001"
+		},
+		{
+			"host" : "127.0.0.1",
+			"port" : "5002"
+		},
+		{
+			"host" : "127.0.0.1",
+			"port" : "5003"
+		}
+	]
+}
+
+---> secure : mode sécurisé ou non sécurisé
+---> dataFilename : le fichier contenant les opérations (devrait se situer dans le répertoire "donnees")
+---> servers : chaque serveur est représentée par son adresse IP ("host") et son port.
+
+La configuration d'un serveur respecte cette structure:
+{
+	"capacity": 8,
+	"mischievious" : 0,
+	"port" : 5001,
+  "host" : "127.0.0.1"
+}
+
+---> capacity : le nombre d'opérations maximal avant de devoir calculer un refus (simulation de ressources)
+---> mischievous : le taux de malicité du serveur (entre 0 et 100)
+---> host : l'adresse IP où le serveur est démarré
+---> port : le port pour communiquer avec le serveur (entre 5001 et 5050)
+
+L'arborescence générale devrait être comme suit:
+
+INF4410-H16
+        TP2
+            donnees
+                (Fichiers texte contenant les opérations)
+            lib
+                gson-2.6.2.jar ---> essentiel à la déserialisation
+            src
+                distributor
+                    (10 fichiers .java)
+                server
+                    Operations.java
+                    Server.java
+                    ServerConfiguration.java
+                shared
+                    (6 fichiers .java)
+            build.xml ---> script pour compiler les fichiers .java
+            client    ---> script pour démarrer le distributeur
+            distributor-config.json ---> configuration du distributeur
+            policy
+            README
+            server ---> script pour démarrer UN serveur
+            srv-config-1.json
+            srv-config-2.json
+            srv-config-3.json
+
+La structure de deploiement devrait ressembler à ceci (après "ant")
+
+deploy
+        dstr
+            distributor.jar
+        shared
+            shared.jar
+        srv
+            server.jar
