@@ -23,13 +23,13 @@ public class Utilities {
 
 		Utilities.log(String.format("Loading configuration [%s]", clazz.toString()));
 		String json = new String(Files.readAllBytes(configPath));
-		System.out.println(json); // DEBUG
 
 		T cfg = null;
 		try {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			cfg = gson.fromJson(json, clazz);
+			Utilities.log(cfg.toString());
 		} catch (JsonParseException jpe) {
 			Utilities.logError("Unable to parse correctly JSON of calculation server configuration...");
 			jpe.printStackTrace();

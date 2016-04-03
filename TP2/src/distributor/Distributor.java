@@ -16,6 +16,8 @@ import java.rmi.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +26,7 @@ import shared.*;
 
 public abstract class Distributor {
 	protected DistributorConfiguration configuration = null;
-	protected List<ServerInterface> calculationServers = null;
+	protected Map<Integer, ServerInterface> calculationServers = null;
 	protected Queue<Operation> pendingOperations = null;
 	protected Queue<Task> doneTasks = null;
 	protected Queue<ServerResult> results = null;
@@ -32,7 +34,7 @@ public abstract class Distributor {
 	protected int nbOperations = 0;
 
 	public Distributor() {
-		this.calculationServers = new ArrayList<ServerInterface>();
+		this.calculationServers = new HashMap<Integer, ServerInterface>();
 		this.pendingOperations = new ConcurrentLinkedQueue<Operation>();
 		this.doneTasks = new ConcurrentLinkedQueue<Task>();
 		this.results = new ConcurrentLinkedQueue<ServerResult>();
@@ -74,10 +76,11 @@ public abstract class Distributor {
 			return;
 		}
 
+		int nbServers = 0;
 		for (ServerInformation serverInfo : this.configuration.getServers()) {
 			ServerInterface stub = this.loadServerStub(serverInfo);
 			if (stub != null) {
-				this.calculationServers.add(stub);
+				this.calculationServers.put(new Integer(++nbServers), stub);
 			}
 		}
 	}
@@ -100,9 +103,15 @@ public abstract class Distributor {
 			return null;
 		}
 
+		Utilities.log(host);
 		ServerInterface stub = null;
 		try {
 			Registry registry = LocateRegistry.getRegistry(host, Constants.RMI_REGISTRY_PORT);
+			
+			for (String s : registry.list()) {
+                           Utilities.log(s); 
+			}
+			
 			String uniqueName = String.format("srv-%d", port);
 			stub = (ServerInterface) registry.lookup(uniqueName);
 		} catch (NotBoundException e) {
@@ -128,9 +137,16 @@ public abstract class Distributor {
 
 		for (String instruction : instructions) {
 			String[] instructionElements = instruction.split(" ");
+			if (instructionElements.length != 2) {
+                                continue;
+			}
+			
 			String function = instructionElements[0];
 			int operand = Integer.parseInt(instructionElements[1]);
-			this.pendingOperations.add(new Operation(function, operand));
+			
+			if (function.equals("fib") || function.equals("prime")) {
+                            this.pendingOperations.add(new Operation(function, operand));
+			}
 		}
 
 		if (this.pendingOperations != null) {
@@ -166,6 +182,7 @@ public abstract class Distributor {
 			}
 		}
 
-		Utilities.logInformation(String.format("Result = %d\tTime elapsed = %s ms", finalResult % 5000, Double.toString(duration * Math.pow(10, -6))));
+		String timeInMs = Double.toString(duration * Math.pow(10, -6));
+		Utilities.logInformation(String.format("Result = %d\tTime elapsed = %s ms", finalResult % 5000, timeInMs));
 	}
 }

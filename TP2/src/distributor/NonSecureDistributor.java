@@ -25,6 +25,8 @@ public final class NonSecureDistributor extends Distributor {
 		List<Operation> operations = null;
 		ExecutorService executor = null;
 
+		
+		
 		while(this.pendingOperations.peek() != null && this.calculationServers.size() > 1) {
 
 			operations = new ArrayList<Operation>();
@@ -44,9 +46,8 @@ public final class NonSecureDistributor extends Distributor {
 
 				executor = Executors.newFixedThreadPool(this.calculationServers.size());
 
-				int workerCounter = 0;
-				for (ServerInterface serverStub : this.calculationServers) {
-					NonSecureDistributorWorker worker = new NonSecureDistributorWorker(operations, serverStub, resultsForTask, ++workerCounter, this.nbTasksTried);
+				for (Entry<Integer, ServerInterface> calculationServer : this.calculationServers.entrySet()) {
+					NonSecureDistributorWorker worker = new NonSecureDistributorWorker(operations, calculationServer.getValue(), resultsForTask, calculationServer.getKey(), this.nbTasksTried);
 					executor.execute(worker);
 				}
 
@@ -65,14 +66,14 @@ public final class NonSecureDistributor extends Distributor {
 
 						Exception failure = sr.getFailure();
 						if (!loadTooBig && failure != null && failure instanceof ServerTooBusyException) {
-							Utilities.log("Server was too busy");
-							//TODO
+							Utilities.log(String.format("Server [%d] was too busy", sr.getServerId()));
 							loadTooBig = true;
 						}
 
 						if (failure != null && failure instanceof RemoteException) {
-							//TODO
-							Utilities.log("RemoteException from server X");
+                                                        int serverId = sr.getServerId();
+							Utilities.log(String.format("RemoteException from server [%d], it will no longer be used.", serverId));
+							this.calculationServers.remove(serverId);
 						}
 				}
 

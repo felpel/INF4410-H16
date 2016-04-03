@@ -25,8 +25,6 @@ public class SecureDistributorWorker extends DistributorWorker {
   public void run() {
     List<Operation> operations = null;
     while(m_pendingOperations.peek() != null) {
-      //TODO Create task with perceived server's capacity
-
       operations = new ArrayList<Operation>();
       for (int i = 0; i < this.m_projectedServerCapacity && this.m_pendingOperations.peek() != null; i++) {
         Operation op = this.m_pendingOperations.poll();
@@ -40,30 +38,35 @@ public class SecureDistributorWorker extends DistributorWorker {
           ++this.m_projectedServerCapacity;
           this.m_doneTasks.add(t);
         }
-        else if (sr.getFailure() instanceof ServerTooBusyException) {
-          Utilities.logError(String.format("%sTask was REFUSED!", this.getLogPrefix()));
-          this.m_rejectedTasks++;
+        
+        if (sr.getFailure() != null) {
+            // Put operations in queue if the task could not be completed
+            for (Operation undoneOperation : operations) {
+                this.m_pendingOperations.add(undoneOperation);
+            }
+        
+            if (sr.getFailure() instanceof ServerTooBusyException) {
+                Utilities.logError(String.format("%sTask was REFUSED!", this.getLogPrefix()));
+                this.m_rejectedTasks++;
 
-          // Put tasks in queue if it could not be completed
-          for (Operation undoneOperation : operations) {
-            this.m_pendingOperations.add(undoneOperation);
-          }
+                //Reduce server's capacity
+                if (this.m_projectedServerCapacity > 1) {
+                    --this.m_projectedServerCapacity;
+                }
 
-          //Reduce server's capacity
-          if (this.m_projectedServerCapacity > 1) {
-            --this.m_projectedServerCapacity;
-          }
-
-          //TODO Check if we want the worker to sleep (ex: 2s) to let the server finish his previous task(s)
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException ie) {
-            //Do nothing
-          }
-        }
-        else if (sr.getFailure() instanceof RemoteException) {
-          Utilities.logError(sr.getFailure().getMessage());
-          break;
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+                    //Do nothing
+                }
+            }
+            else if (sr.getFailure() instanceof RemoteException) {
+                Utilities.logError(sr.getFailure().getMessage());
+                break;
+            }
+            else {
+                Utilities.logError(String.format("Unexpected error occured:\n%s", sr.getFailure().getMessage()));
+            }
         }
       }
     }

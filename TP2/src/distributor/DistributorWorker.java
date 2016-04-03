@@ -41,13 +41,16 @@ public abstract class DistributorWorker implements Runnable {
 
     ServerResult sResult = new ServerResult();
     try {
+      sResult.setServerId(this.m_id);
       sResult.setResult(m_serverStub.process(t));
+      
       Utilities.log(String.format("%sReceived result from task [%d] -> %d", this.getLogPrefix(), t.getId(), sResult.getResult()));
     } catch(ServerTooBusyException stbe) {
       sResult.setFailure(stbe);
     } catch(RemoteException re) {
       sResult.setFailure(re);
     }
+    
 
     m_results.add(sResult);
     return sResult;

@@ -63,28 +63,29 @@ public class Server implements ServerInterface {
 		ServerInterface stub = null;
 		Registry registry = null;
 		try {
-        stub = (ServerInterface) UnicastRemoteObject
-                        .exportObject(this, configuration.getPort());
-        registry = LocateRegistry.getRegistry("127.0.0.1", Constants.RMI_REGISTRY_PORT);
-				String uniqueName = String.format("srv-%d", configuration.getPort());
-        registry.rebind(uniqueName, stub);
-        Utilities.logInformation("Server ready.");
-				this.logServerInformation(uniqueName);
+                    stub = (ServerInterface) UnicastRemoteObject
+                                    .exportObject(this, configuration.getPort());
+                    registry = LocateRegistry.getRegistry(configuration.getHost(), Constants.RMI_REGISTRY_PORT);
+                    String uniqueName = String.format("srv-%d", configuration.getPort());
+                    registry.rebind(uniqueName, stub);
+                    Utilities.logInformation("Server ready.");
+                    this.logServerInformation(uniqueName);
 
-    } catch (ConnectException e) {
-        System.err.println("Impossible to connect to the RMI registry." +
-                           "Has rmiregistry [" + configuration.getPort() + "] been started ?");
-        System.err.println();
-        System.err.println("Error: " + e.getMessage());
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-    }
+                } catch (ConnectException e) {
+                    System.err.println("Impossible to connect to the RMI registry." +
+                                    "Has rmiregistry [" + Constants.RMI_REGISTRY_PORT + "] been started ?");
+                    System.err.println();
+                    System.err.println("Error: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error: " + e.getMessage());
+                }
 	}
 
 	private void logServerInformation(String name) {
 		Utilities.log("=============================================");
 		Utilities.log(String.format("Name:\t\t%s", name));
 		if (this.configuration != null) {
+                        Utilities.log(String.format("Host:\t\t%s", this.configuration.getHost()));
 			Utilities.log(String.format("Port:\t\t%s", this.configuration.getPort()));
 			if (this.configuration.getMischievious() == 0) {
 					Utilities.log("Server is not mischievous (0%).");
@@ -99,7 +100,6 @@ public class Server implements ServerInterface {
 		Utilities.log("=============================================\n");
 	}
 
-	//VERY IMPORTANT TO HANDLE REMOTE EXCEPTION ON CLIENT SIDE ("Pannes intempestives")
 	public int process(Task task) throws RemoteException, ServerTooBusyException
 	{
 		Utilities.log("Received new task!\n" + task.toString());

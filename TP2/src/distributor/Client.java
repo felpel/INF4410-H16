@@ -8,12 +8,6 @@ public class Client {
 	public static final String DEFAULT_CONFIGURATION = "distributor-config.json";
 
 	public static void main(String[] args) {
-		/*if (args[0].equals("--benchmark") || args[0].equals("-b")) {
-			doBenchmark
-		}
-
-		return;*/
-
 		DistributorConfiguration configuration = null;
 		Distributor distributor = null;
 
