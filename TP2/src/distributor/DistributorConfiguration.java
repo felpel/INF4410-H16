@@ -40,20 +40,7 @@ public class DistributorConfiguration
 	}
 
 	public DistributorConfiguration() {
-		/*this(true, "donnees-2317.txt");
-
-		List<ServerInformation> servers = new ArrayList<ServerInformation>();
-		servers.add(new ServerInformation(5000));
-		servers.add(new ServerInformation(5001));
-		servers.add(new ServerInformation(5002));
-
-		setServers(servers);*/
 	}
-
-	/*public DistributorConfiguration(boolean secure, String filename) {
-		setSecure(secure);
-		setDataFilename(filename);
-	}*/
 	
         @Override
 	public String toString() {

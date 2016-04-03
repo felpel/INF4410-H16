@@ -26,15 +26,5 @@ public class ServerInformation {
 	}
 	
 	public ServerInformation() {
-		//this(5000);
-	}
-	
-	public ServerInformation(int port) {
-		//this("127.0.0.1", port);
-	}
-	
-	public ServerInformation(String host, int port) {
-		//setHost(host);
-		//setPort(port);
 	}
 }

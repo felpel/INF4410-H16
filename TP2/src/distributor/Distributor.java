@@ -103,14 +103,9 @@ public abstract class Distributor {
 			return null;
 		}
 
-		Utilities.log(host);
 		ServerInterface stub = null;
 		try {
 			Registry registry = LocateRegistry.getRegistry(host, Constants.RMI_REGISTRY_PORT);
-			
-			for (String s : registry.list()) {
-                           Utilities.log(s); 
-			}
 			
 			String uniqueName = String.format("srv-%d", port);
 			stub = (ServerInterface) registry.lookup(uniqueName);

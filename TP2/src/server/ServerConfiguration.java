@@ -1,15 +1,19 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 public class ServerConfiguration {
+        @Expose
 	private int capacity; // voir p.5 ("Sim. des ressources")
+	@Expose
 	private int mischievious; // voir p.5 ("Serveur de calcul malicieux")
+	@Expose
 	private int port; // voir p.8 ("Conseil pour le travail")
+	@Expose
 	private String host;
 	
 	public void setCapacity(int capacity) {
-		//TODO Maybe verify if between 0 and 10 (see specs)
 		this.capacity = capacity;
 	}
 	
@@ -51,14 +55,7 @@ public class ServerConfiguration {
 	}
 	
 	public ServerConfiguration() {
-		this(10, 0, "127.0.0.1", 5000);
-	}
-	
-	public ServerConfiguration(int capacity, int mischievious, String host, int port) {
-		setCapacity(capacity);
-		setMischievious(mischievious);
-		setHost(host);
-		setPort(port);
+		//this(10, 0, "127.0.0.1", 5000);
 	}
 	
 	@Override

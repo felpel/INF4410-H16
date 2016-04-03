@@ -25,8 +25,6 @@ public final class NonSecureDistributor extends Distributor {
 		List<Operation> operations = null;
 		ExecutorService executor = null;
 
-		
-		
 		while(this.pendingOperations.peek() != null && this.calculationServers.size() > 1) {
 
 			operations = new ArrayList<Operation>();
