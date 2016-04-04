@@ -1,119 +1,100 @@
-[H[2J> Loading configuration [class distributor.DistributorConfiguration]
-{
-	"secure" : true,
-	"dataFilename" : "all.txt",
-	"servers" :
-	[
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5001"
-		},
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5002"
-		},
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5003"
-		}
-	]
-}
-
-> [W2] Trying to process task...
+[3;J[H[2J> Loading configuration [class distributor.DistributorConfiguration]
+> {"secure":true,"dataFilename":"all.txt","servers":[{"host":"132.207.12.51","port":5001},{"host":"132.207.12.57","port":5002},{"host":"132.207.12.59","port":5003}]}
+> [W1] Trying to process task...
 Task [#1]
 ----------------------
 -	fib(43)
 
-> [W1] Trying to process task...
+> [W3] Trying to process task...
 Task [#3]
 ----------------------
 -	fib(37)
 
-> [W3] Trying to process task...
+> [W2] Trying to process task...
 Task [#2]
 ----------------------
 -	fib(2)
 
-> [W3] Received result from task [2] -> 1
-> [W3] Trying to process task...
+> [W2] Received result from task [2] -> 1
+> [W2] Trying to process task...
 Task [#4]
 ----------------------
 -	fib(31)
 -	prime(207926)
 
-> [W1] Received result from task [3] -> 2817
-> [W1] Trying to process task...
+> [W3] Received result from task [3] -> 2817
+> [W3] Trying to process task...
 Task [#5]
 ----------------------
 -	fib(27)
 -	fib(11)
 
-> [W1] Received result from task [5] -> 1507
-> [W1] Trying to process task...
+> [W3] Received result from task [5] -> 1507
+> [W3] Trying to process task...
 Task [#6]
 ----------------------
 -	fib(14)
 -	prime(208358)
 -	fib(27)
 
-> [W2] Received result from task [1] -> 4437
-> [W2] Trying to process task...
+> [W1] Received result from task [1] -> 4437
+> [W1] Trying to process task...
 Task [#7]
 ----------------------
 -	fib(11)
 -	prime(14290)
 
-> [W2] Received result from task [7] -> 1518
-> [W2] Trying to process task...
+> [W1] Received result from task [7] -> 1518
+> [W1] Trying to process task...
 Task [#8]
 ----------------------
 -	prime(143373)
 -	fib(40)
 -	fib(18)
 
-> [W3] Received result from task [4] -> 232
+> [W3] Received result from task [6] -> 974
 > [W3] Trying to process task...
 Task [#9]
 ----------------------
 -	prime(143373)
 -	fib(40)
 -	prime(18958)
+-	prime(5961)
 
-> [W1] Received result from task [6] -> 974
+> [W1] Received result from task [8] -> 4530
 > [W1] Trying to process task...
 Task [#10]
 ----------------------
--	prime(5961)
 -	fib(21)
 -	fib(0)
 -	fib(4)
+-	prime(163294)
 
-> [W1] Received result from task [10] -> 2936
-> [W1] Trying to process task...
+> [W2] Received result from task [4] -> 232
+> [W2] Trying to process task...
 Task [#11]
 ----------------------
--	prime(163294)
 -	fib(8)
 -	fib(10)
 -	fib(34)
--	prime(114877)
 
-> [W2] Received result from task [8] -> 4530
+> [W2] Received result from task [11] -> 2963
 > [W2] Trying to process task...
 Task [#12]
 ----------------------
+-	prime(114877)
 -	prime(54294)
 -	fib(4)
 -	fib(20)
--	prime(161618)
 
 > [W3] Trying to process task...
 Task [#13]
 ----------------------
+-	prime(161618)
 -	fib(33)
 -	prime(207926)
 
-> [W2] Received result from task [12] -> 1626
+> [W2] Received result from task [12] -> 2228
 > [W2] Trying to process task...
 Task [#14]
 ----------------------
@@ -123,7 +104,7 @@ Task [#14]
 -	fib(11)
 -	fib(32)
 
-> [W1] Received result from task [11] -> 1021
+> [W1] Received result from task [10] -> 2596
 > [W1] Trying to process task...
 Task [#15]
 ----------------------
@@ -132,32 +113,32 @@ Task [#15]
 -	fib(41)
 -	prime(49233)
 -	fib(13)
--	prime(143378)
 
-> [W3] Received result from task [13] -> 3541
-> [W3] Trying to process task...
+> [W1] Received result from task [15] -> 243
+> [W1] Trying to process task...
 Task [#16]
 ----------------------
+-	prime(143378)
 -	prime(11922)
 -	prime(208358)
 -	prime(65644)
-
-> [W1] Received result from task [15] -> 4460
-> [W1] Trying to process task...
-Task [#17]
-----------------------
 -	fib(3)
 -	fib(11)
+
+> [W3] Received result from task [13] -> 4350
+> [W3] Trying to process task...
+Task [#17]
+----------------------
 -	fib(31)
 -	fib(17)
 -	fib(39)
 -	prime(12664)
--	prime(207932)
 
-> [W3] Received result from task [16] -> 2577
+> [W3] Received result from task [17] -> 435
 > [W3] Trying to process task...
 Task [#18]
 ----------------------
+-	prime(207932)
 -	prime(26745)
 -	prime(116557)
 -	fib(0)
@@ -174,8 +155,8 @@ Task [#19]
 -	prime(209414)
 -	prime(17413)
 
-> [W3] Received result from task [18] -> 199
-> [W3] Trying to process task...
+> [W1] Received result from task [16] -> 1885
+> [W1] Trying to process task...
 Task [#20]
 ----------------------
 -	fib(43)
@@ -183,13 +164,13 @@ Task [#20]
 -	prime(143373)
 -	prime(209414)
 -	fib(7)
-
-> [W1] Received result from task [17] -> 755
-> [W1] Trying to process task...
-Task [#21]
-----------------------
 -	fib(22)
 -	prime(209414)
+
+> [W3] Received result from task [18] -> 428
+> [W3] Trying to process task...
+Task [#21]
+----------------------
 -	prime(208982)
 -	fib(22)
 -	prime(106752)
@@ -209,7 +190,8 @@ Task [#22]
 -	prime(207778)
 -	prime(56874)
 
-> [W2] Trying to process task...
+> [W3] Received result from task [21] -> 4288
+> [W3] Trying to process task...
 Task [#23]
 ----------------------
 -	prime(11061)
@@ -218,81 +200,76 @@ Task [#23]
 -	prime(2764)
 -	prime(144219)
 -	fib(43)
+-	fib(33)
 
-> [W3] Received result from task [20] -> 3713
 > [W3] Trying to process task...
 Task [#24]
 ----------------------
--	fib(33)
 -	prime(208246)
 -	prime(6115)
 -	fib(21)
 -	prime(3126)
 -	fib(44)
+-	prime(208246)
 
-> [W3] Trying to process task...
+> [W1] Received result from task [20] -> 1131
+> [W1] Trying to process task...
 Task [#25]
 ----------------------
--	prime(208246)
 -	prime(161618)
 -	fib(14)
 -	prime(107572)
 -	fib(31)
-
-> [W2] Received result from task [23] -> 314
-> [W2] Trying to process task...
-Task [#26]
-----------------------
 -	prime(208982)
 -	fib(12)
 -	prime(162698)
 -	prime(207226)
+
+> [W2] Received result from task [22] -> 4855
+> [W2] Trying to process task...
+Task [#26]
+----------------------
 -	fib(42)
 -	fib(9)
 -	fib(0)
-
-> [W1] Received result from task [21] -> 1706
-> [W1] Trying to process task...
-Task [#27]
-----------------------
 -	prime(162698)
 -	prime(94790)
 -	prime(208246)
 -	prime(207778)
 -	prime(162098)
+
+> [W3] Received result from task [24] -> 4669
+> [W3] Trying to process task...
+Task [#27]
+----------------------
 -	prime(208363)
 -	fib(30)
 -	fib(32)
 -	prime(161618)
-
-> [W3] Received result from task [25] -> 3471
-> [W3] Trying to process task...
-Task [#28]
-----------------------
 -	prime(207226)
 -	prime(209414)
 -	prime(9498)
+
+> [W1] Received result from task [25] -> 3945
+> [W1] Trying to process task...
+Task [#28]
+----------------------
 -	fib(42)
 -	prime(25809)
 -	fib(6)
-
-> [W2] Received result from task [26] -> 3927
-> [W2] Trying to process task...
-Task [#29]
-----------------------
 -	fib(27)
 -	fib(31)
 -	fib(26)
 -	fib(4)
 -	fib(27)
 -	prime(145113)
+
+> [W1] Received result from task [28] -> 4405
+> [W1] Trying to process task...
+Task [#29]
+----------------------
 -	prime(142599)
 -	prime(4916)
-
-> [W3] Received result from task [28] -> 436
-> [W3] Trying to process task...
-Task [#30]
-----------------------
 -	fib(37)
 -	prime(10003)
 -	fib(12)
@@ -300,12 +277,12 @@ Task [#30]
 -	prime(207931)
 -	prime(108572)
 -	prime(4287)
-
-> [W2] Received result from task [29] -> 2634
-> [W2] Trying to process task...
-Task [#31]
-----------------------
 -	fib(41)
+
+> [W2] Received result from task [26] -> 4219
+> [W2] Trying to process task...
+Task [#30]
+----------------------
 -	fib(6)
 -	fib(13)
 -	prime(2446)
@@ -314,12 +291,12 @@ Task [#31]
 -	prime(6145)
 -	fib(33)
 -	fib(25)
-
-> [W2] Received result from task [31] -> 4204
-> [W2] Trying to process task...
-Task [#32]
-----------------------
 -	prime(81429)
+
+> [W2] Received result from task [30] -> 1206
+> [W2] Trying to process task...
+Task [#31]
+----------------------
 -	prime(2589)
 -	fib(33)
 -	prime(9493)
@@ -329,12 +306,12 @@ Task [#32]
 -	prime(106748)
 -	fib(7)
 -	prime(142599)
-
-> [W3] Received result from task [30] -> 3710
-> [W3] Trying to process task...
-Task [#33]
-----------------------
 -	fib(14)
+
+> [W3] Received result from task [27] -> 3124
+> [W3] Trying to process task...
+Task [#32]
+----------------------
 -	prime(5331)
 -	prime(18566)
 -	fib(33)
@@ -342,59 +319,54 @@ Task [#33]
 -	fib(11)
 -	prime(108588)
 -	fib(9)
-
-> [W3] Trying to process task...
-Task [#34]
-----------------------
 -	prime(8562)
+
+> [W1] Received result from task [29] -> 2613
+> [W1] Trying to process task...
+Task [#33]
+----------------------
 -	prime(163294)
 -	prime(2446)
 -	fib(34)
 -	prime(51477)
 -	prime(209414)
 -	fib(14)
-
-> [W3] Trying to process task...
-Task [#35]
-----------------------
 -	fib(9)
 -	fib(11)
 -	prime(2858)
 -	fib(5)
 -	fib(43)
--	fib(42)
 
-> [W1] Received result from task [27] -> 3110
-> [W1] Trying to process task...
-Task [#36]
+> [W3] Trying to process task...
+Task [#34]
 ----------------------
+-	fib(42)
 -	prime(108572)
 -	prime(33302)
 -	fib(43)
 -	prime(207778)
 -	fib(7)
 -	fib(1)
+
+> [W1] Trying to process task...
+Task [#35]
+----------------------
 -	prime(142599)
 -	prime(46415)
 -	prime(107063)
 -	fib(4)
-
-> [W3] Received result from task [35] -> 290
-> [W3] Trying to process task...
-Task [#37]
-----------------------
 -	fib(24)
 -	prime(34318)
 -	prime(3554)
 -	prime(142599)
 -	fib(33)
 -	fib(9)
--	prime(18958)
 
-> [W2] Received result from task [32] -> 2181
+> [W2] Received result from task [31] -> 415
 > [W2] Trying to process task...
-Task [#38]
+Task [#36]
 ----------------------
+-	prime(18958)
 -	fib(33)
 -	fib(5)
 -	prime(32822)
@@ -405,12 +377,12 @@ Task [#38]
 -	fib(44)
 -	prime(209414)
 -	prime(85795)
--	fib(35)
 
-> [W3] Received result from task [37] -> 1928
-> [W3] Trying to process task...
-Task [#39]
+> [W1] Received result from task [35] -> 4001
+> [W1] Trying to process task...
+Task [#37]
 ----------------------
+-	fib(35)
 -	prime(4287)
 -	fib(2)
 -	prime(162698)
@@ -419,13 +391,13 @@ Task [#39]
 -	prime(162098)
 -	prime(144219)
 -	prime(10662)
-
-> [W1] Received result from task [36] -> 3686
-> [W1] Trying to process task...
-Task [#40]
-----------------------
 -	fib(43)
 -	fib(44)
+
+> [W3] Received result from task [34] -> 1430
+> [W3] Trying to process task...
+Task [#38]
+----------------------
 -	prime(2458)
 -	fib(9)
 -	fib(2)
@@ -434,12 +406,12 @@ Task [#40]
 -	prime(95066)
 -	fib(26)
 -	fib(42)
--	fib(21)
 
-> [W3] Received result from task [39] -> 4394
+> [W3] Received result from task [38] -> 3860
 > [W3] Trying to process task...
-Task [#41]
+Task [#39]
 ----------------------
+-	fib(21)
 -	prime(162098)
 -	fib(38)
 -	prime(3461)
@@ -448,12 +420,11 @@ Task [#41]
 -	prime(208982)
 -	prime(13453)
 -	fib(37)
--	prime(19466)
 
-> [W2] Received result from task [38] -> 4572
-> [W2] Trying to process task...
-Task [#42]
+> [W3] Trying to process task...
+Task [#40]
 ----------------------
+-	prime(19466)
 -	fib(38)
 -	prime(7948)
 -	fib(9)
@@ -461,16 +432,16 @@ Task [#42]
 -	fib(3)
 -	fib(24)
 -	prime(18567)
+
+> [W2] Received result from task [36] -> 1586
+> [W2] Trying to process task...
+Task [#41]
+----------------------
 -	prime(18345)
 -	fib(20)
 -	prime(58398)
 -	prime(34318)
 -	prime(14264)
-
-> [W2] Received result from task [42] -> 1635
-> [W2] Trying to process task...
-Task [#43]
-----------------------
 -	fib(31)
 -	fib(24)
 -	prime(3687)
@@ -478,19 +449,25 @@ Task [#43]
 -	fib(30)
 -	fib(13)
 -	prime(163294)
+
+> [W3] Received result from task [40] -> 4705
+> [W3] Trying to process task...
+Task [#42]
+----------------------
 -	fib(34)
 -	prime(66604)
 -	prime(32822)
 -	prime(208982)
 -	prime(163303)
 -	prime(9582)
-
-> [W2] Trying to process task...
-Task [#44]
-----------------------
 -	fib(30)
 -	fib(43)
 -	fib(33)
+
+> [W1] Received result from task [37] -> 29
+> [W1] Trying to process task...
+Task [#43]
+----------------------
 -	prime(161618)
 -	prime(207926)
 -	prime(163294)
@@ -500,13 +477,14 @@ Task [#44]
 -	prime(208837)
 -	fib(32)
 -	prime(72392)
-
-> [W2] Trying to process task...
-Task [#45]
-----------------------
 -	fib(38)
 -	prime(12776)
 -	prime(3194)
+
+> [W2] Received result from task [41] -> 4504
+> [W2] Trying to process task...
+Task [#44]
+----------------------
 -	fib(12)
 -	prime(7374)
 -	prime(145113)
@@ -515,25 +493,21 @@ Task [#45]
 -	prime(18103)
 -	fib(7)
 -	fib(35)
-
-> [W2] Trying to process task...
-Task [#46]
-----------------------
 -	fib(30)
 -	fib(29)
 -	fib(3)
 -	prime(5716)
 -	fib(16)
+
+> [W2] Received result from task [44] -> 1613
+> [W2] Trying to process task...
+Task [#45]
+----------------------
 -	prime(207926)
 -	prime(116564)
 -	prime(8574)
 -	prime(3194)
 -	prime(207778)
-
-> [W1] Received result from task [40] -> 2976
-> [W1] Trying to process task...
-Task [#47]
-----------------------
 -	fib(7)
 -	prime(6388)
 -	prime(108572)
@@ -543,214 +517,89 @@ Task [#47]
 -	prime(85795)
 -	fib(18)
 -	prime(143373)
+
+> [W3] Received result from task [42] -> 3661
+> [W3] Trying to process task...
+Task [#46]
+----------------------
 -	fib(40)
 -	prime(18958)
--	fib(13)
-
-> [W3] Received result from task [41] -> 2283
-> [W3] Trying to process task...
-Task [#48]
-----------------------
--	prime(116557)
--	fib(19)
--	fib(23)
--	fib(20)
--	prime(207778)
--	prime(56874)
+-	prime(5961)
+-	prime(11061)
+-	prime(5178)
+-	fib(8)
+-	prime(2764)
+-	prime(144219)
+-	fib(43)
 -	fib(33)
--	prime(208246)
--	prime(6115)
--	fib(21)
 
+> [W3] Received result from task [46] -> 513
 > [W3] Trying to process task...
-Task [#49]
+Task [#47]
 ----------------------
--	prime(3126)
--	fib(44)
--	fib(14)
 -	prime(5331)
 -	prime(18566)
 -	fib(33)
 -	prime(3194)
 -	fib(11)
 -	prime(108588)
+-	fib(9)
+-	prime(8562)
+-	prime(163294)
+-	prime(2446)
+-	fib(34)
+
+> [W3] Received result from task [47] -> 3591
+> [W3] Trying to process task...
+Task [#48]
+----------------------
+-	prime(51477)
+-	prime(209414)
+-	fib(14)
+-	fib(9)
+-	fib(11)
+-	prime(2858)
+-	fib(5)
+-	fib(43)
+-	fib(21)
+-	prime(162098)
+-	fib(38)
+-	prime(3461)
+
+> [W1] Received result from task [43] -> 61
+> [W1] Trying to process task...
+Task [#49]
+----------------------
+-	fib(19)
+-	prime(120113)
+-	prime(208982)
+-	prime(13453)
+-	fib(37)
+-	prime(51477)
+-	prime(209414)
+-	fib(14)
+-	fib(9)
+-	fib(11)
+-	prime(2858)
+-	fib(5)
+-	fib(43)
 
 > [W3] Trying to process task...
 Task [#50]
 ----------------------
--	fib(9)
--	prime(8562)
--	prime(163294)
--	prime(2446)
--	fib(34)
--	prime(51477)
--	prime(209414)
--	fib(14)
-
-> [W3] Trying to process task...
-Task [#51]
-----------------------
--	fib(31)
--	fib(24)
--	prime(3687)
--	fib(10)
--	fib(30)
--	fib(13)
--	prime(163294)
-
-> [W3] Received result from task [51] -> 2841
-> [W3] Trying to process task...
-Task [#52]
-----------------------
--	fib(34)
--	prime(66604)
--	prime(32822)
--	prime(208982)
--	prime(163303)
--	prime(9582)
--	fib(30)
--	fib(43)
-
-> [W1] Received result from task [47] -> 4755
-> [W1] Trying to process task...
-Task [#53]
-----------------------
--	fib(33)
--	prime(161618)
--	prime(207926)
--	prime(163294)
--	prime(162098)
--	fib(9)
--	fib(1)
--	prime(208837)
--	fib(32)
--	prime(72392)
--	fib(38)
--	prime(12776)
--	prime(3194)
-
-> [W3] Trying to process task...
-Task [#54]
-----------------------
--	fib(12)
--	prime(7374)
--	prime(145113)
--	fib(42)
--	fib(16)
--	prime(18103)
--	fib(7)
-
-> [W3] Trying to process task...
-Task [#55]
-----------------------
--	fib(35)
--	prime(116557)
--	fib(19)
--	fib(23)
--	fib(20)
--	prime(207778)
-
-> [W2] Received result from task [46] -> 4746
-> [W2] Trying to process task...
-Task [#56]
-----------------------
--	prime(56874)
--	fib(33)
--	prime(208246)
--	prime(6115)
 -	fib(21)
--	prime(3126)
--	fib(44)
--	fib(14)
--	prime(5331)
--	prime(18566)
--	fib(33)
+-	prime(162098)
+-	fib(38)
+-	prime(3461)
 
-> [W3] Received result from task [55] -> 2608
-> [W3] Trying to process task...
-Task [#57]
-----------------------
--	prime(3194)
--	fib(11)
--	prime(108588)
--	fib(9)
--	prime(8562)
--	prime(163294)
--	prime(2446)
-
-> [W2] Received result from task [56] -> 618
-> [W2] Trying to process task...
-Task [#58]
-----------------------
--	fib(34)
--	prime(51477)
--	prime(209414)
--	fib(14)
--	fib(34)
--	prime(66604)
--	prime(32822)
--	prime(208982)
--	prime(163303)
--	prime(9582)
--	fib(30)
--	fib(43)
-
-> [W3] Received result from task [57] -> 66
-> [W3] Trying to process task...
-Task [#59]
-----------------------
--	fib(12)
--	prime(7374)
--	prime(145113)
--	fib(42)
--	fib(16)
--	prime(18103)
--	fib(7)
--	fib(34)
-
-> [W2] Trying to process task...
-Task [#60]
-----------------------
--	prime(51477)
--	prime(209414)
--	fib(14)
--	fib(34)
--	prime(66604)
--	prime(32822)
--	prime(208982)
--	prime(163303)
--	prime(9582)
--	fib(30)
--	fib(43)
-
-> [W2] Trying to process task...
-Task [#61]
-----------------------
--	prime(51477)
--	prime(209414)
--	fib(14)
--	fib(34)
--	prime(66604)
--	prime(32822)
--	prime(208982)
--	prime(163303)
--	prime(9582)
--	fib(30)
-
-> [W3] Received result from task [59] -> 3348
-> [W3] Trying to process task...
-Task [#62]
-----------------------
--	fib(43)
-
-> [W3] Received result from task [62] -> 4437
-> [W3] Finished
----> [W3]  9 task(s) were refused.
-> [W1] Received result from task [53] -> 4639
-> [W1] Finished
----> [W1]  0 task(s) were refused.
-> [W2] Received result from task [61] -> 1889
+> [W2] Received result from task [45] -> 1947
 > [W2] Finished
----> [W2]  6 task(s) were refused.
----> Start time: 31718457139459 ns	End time: 32352097634339 ns
----> Result = 4095	Time elapsed = 633640.49488 ms
+---> [W2]  0 task(s) were refused.
+> [W3] Received result from task [50] -> 3625
+> [W3] Finished
+---> [W3]  5 task(s) were refused.
+> [W1] Received result from task [49] -> 3108
+> [W1] Finished
+---> [W1]  1 task(s) were refused.
+---> Start time: 283502519981041 ns	End time: 283610247218881 ns
+---> Result = 4095	Time elapsed = 107727.23784 ms
