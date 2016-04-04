@@ -6,8 +6,11 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
+//Custom class that represents the configuration of a distributor.
+
 public class DistributorConfiguration
 {
+	//We need to expose these because it is required for the deserialization made by the Gson Builder
         @Expose
 	private boolean secure;
         @Expose

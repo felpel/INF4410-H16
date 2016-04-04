@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import shared.*;
 
+//Main class for creating a distributor and start processing the operations
 public class Client {
 	public static final String DEFAULT_CONFIGURATION = "distributor-config.json";
 

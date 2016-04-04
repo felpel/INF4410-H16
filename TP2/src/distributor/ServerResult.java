@@ -1,5 +1,7 @@
 package distributor;
 
+//Custom class that serves as a container for a result from a calculation server 
+
 public class ServerResult {
   private Integer m_computedResult = null;
   private Exception m_failure = null;

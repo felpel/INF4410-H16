@@ -2,6 +2,8 @@ package distributor;
 
 import com.google.gson.annotations.Expose;
 
+//Custom class to represent a calculation server on the distributor side
+
 public class ServerInformation {
         @Expose
 	private String host;

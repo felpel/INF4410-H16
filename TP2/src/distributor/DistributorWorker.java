@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 
 import shared.*;
 
+//Abstract class that defines how our distributor's worker should work (both Secure and NonSecure)
+
 public abstract class DistributorWorker implements Runnable {
   public final int MAX_RETRY = 5;
 
@@ -36,6 +38,8 @@ public abstract class DistributorWorker implements Runnable {
     return t;
   }
 
+  //Create a new ServerResult and set the result to the value returned by the process function on the stub
+  //If there is any error, we add those failures to the ServerResult so the distributor can react accordingly.
   public final ServerResult tryAddResultFromServer(Task t) {
     Utilities.log(String.format("%sTrying to process task...\n%s", this.getLogPrefix(), t.toString(true)));
 

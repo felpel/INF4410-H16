@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicInteger;
 import shared.*;
 
+//DistributorWorker for the NonSecure mode of the application
+
 public class NonSecureDistributorWorker extends DistributorWorker {
   private List<Operation> m_operations = null;
 
@@ -15,6 +17,7 @@ public class NonSecureDistributorWorker extends DistributorWorker {
     this.m_operations = operations;
   }
 
+  //Create a task with the current operations and try to process them
   @Override
   public void run() {
     if (!this.m_operations.isEmpty()) {

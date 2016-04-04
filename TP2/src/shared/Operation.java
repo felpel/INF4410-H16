@@ -2,6 +2,11 @@ package shared;
 
 import java.io.Serializable;
 
+//Custom Class used to represent an operation in a data file
+//For exemple, fib 5
+//The member function will have the value "fib"
+//And the member operand will be the int value of 5
+
 //@SuppressWarnings("serial")
 public class Operation implements Serializable {
 	private String function;

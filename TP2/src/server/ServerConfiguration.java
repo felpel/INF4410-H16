@@ -3,13 +3,17 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
+//Custom class that represents the configuration of a calculation server.
+
 public class ServerConfiguration {
-        @Expose
-	private int capacity; // voir p.5 ("Sim. des ressources")
+  
+  //We need to expose these because it is required for the deserialization made by the Gson Builder
+  @Expose
+	private int capacity; // see p.5 ("Sim. des ressources")
 	@Expose
-	private int mischievious; // voir p.5 ("Serveur de calcul malicieux")
+	private int mischievious; // see p.5 ("Serveur de calcul malicieux")
 	@Expose
-	private int port; // voir p.8 ("Conseil pour le travail")
+	private int port; // see p.8 ("Conseil pour le travail")
 	@Expose
 	private String host;
 	
@@ -22,7 +26,6 @@ public class ServerConfiguration {
 	}
 	
 	public void setMischievious(int mischievious) {
-		//TODO Maybe verify if between 0 and 100 (%)
 		this.mischievious = mischievious;
 	}
 	
@@ -43,19 +46,18 @@ public class ServerConfiguration {
 	}
 	
 	public void setHost(String host) {
-                if (host == null || host.trim().isEmpty()) {
-                        throw new IllegalArgumentException("Host must not be empty.");
-                }
-                
-                this.host = host;
+    if (host == null || host.trim().isEmpty()) {
+            throw new IllegalArgumentException("Host must not be empty.");
+    }
+    
+    this.host = host;
 	}
 	
 	public String getHost() {
-                return this.host;
+    return this.host;
 	}
 	
 	public ServerConfiguration() {
-		//this(10, 0, "127.0.0.1", 5000);
 	}
 	
 	@Override

@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import shared.*;
 
+//DistributorWorker for the Secure mode of the application
+
 public class SecureDistributorWorker extends DistributorWorker {
   private Queue<Task> m_doneTasks = null;
   private int m_projectedServerCapacity = 1;
@@ -21,19 +23,27 @@ public class SecureDistributorWorker extends DistributorWorker {
     m_doneTasks = doneTasks;
   }
 
+
+  //The logic for the run in this mode is more complex than the one for NoNSecureDistributorWorker. This is because the workers in the 
+  //secure mode share a list of operations and they are doing the polling instead of the Distributor.
   @Override
   public void run() {
     List<Operation> operations = null;
     while(m_pendingOperations.peek() != null) {
       operations = new ArrayList<Operation>();
+      //Simply populate a list of operations based on the projectedServerCapacity
       for (int i = 0; i < this.m_projectedServerCapacity && this.m_pendingOperations.peek() != null; i++) {
         Operation op = this.m_pendingOperations.poll();
         operations.add(op);
       }
 
       if (!operations.isEmpty()) {
+        //Create a task with the selected operations and then process on the server
         Task t = createTask(operations);
         ServerResult sr = this.tryAddResultFromServer(t);
+
+        //If we recieved a result and there was no failure, we can increment the projected server capacity
+        //and add the task to the doneTask list
         if (sr.getResult() != null && sr.getFailure() == null) {
           ++this.m_projectedServerCapacity;
           this.m_doneTasks.add(t);

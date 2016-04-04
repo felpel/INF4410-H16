@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 
+//Custom class to regroup operations before sending to calc. servers
+//A task has an ID and an list of Operations
+
 //@SuppressWarnings("serial")
 public class Task implements Serializable {
 	private int id;

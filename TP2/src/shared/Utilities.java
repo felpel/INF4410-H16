@@ -14,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 public class Utilities {
+
+	//Function used to read a Json config file, deserialize it to an object of type clazz and return that object
 	public static <T> T readJsonConfiguration(String filename, Class<T> clazz) throws IOException {
 		Path configPath = Paths.get(filename);
 
