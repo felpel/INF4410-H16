@@ -15,8 +15,11 @@ import java.util.concurrent.Executors;
 
 import shared.*;
 
+//Distributor for the NonSecure mode of the application
+
 public final class NonSecureDistributor extends Distributor {
 
+	//We send the same task to every server so the tasks need to have a common number of operations
 	private int m_projectedServerCapacity = 1;
 	private ExecutorService m_executor = null;
 
@@ -25,8 +28,10 @@ public final class NonSecureDistributor extends Distributor {
 		List<Operation> operations = null;
 		ExecutorService executor = null;
 
+		//While there are pending operations and we have atleast 2 calculation servers
 		while(this.pendingOperations.peek() != null && this.calculationServers.size() > 1) {
 
+			//Retrieve from the list the appropriate amount of operations
 			operations = new ArrayList<Operation>();
 			for (int i = 0; i < this.m_projectedServerCapacity; i++) {
 				Operation op = this.pendingOperations.poll();
@@ -37,6 +42,8 @@ public final class NonSecureDistributor extends Distributor {
 
 			int finalResult = 0;
 			boolean majorityDetermined = false;
+			//This map will contain all the results. That enables us to check for a majority in past results if 
+			//its not possible to have a majority (ex : only two servers answered with two diff answers)
 			Map<Integer, Integer> pastResults = new HashMap<Integer, Integer>();
 
 			while(!majorityDetermined) {
@@ -44,9 +51,8 @@ public final class NonSecureDistributor extends Distributor {
 
 				executor = Executors.newFixedThreadPool(this.calculationServers.size());
 
-				int workerCounter = 0;
-				for (ServerInterface serverStub : this.calculationServers) {
-					NonSecureDistributorWorker worker = new NonSecureDistributorWorker(operations, serverStub, resultsForTask, ++workerCounter, this.nbTasksTried);
+				for (Entry<Integer, ServerInterface> calculationServer : this.calculationServers.entrySet()) {
+					NonSecureDistributorWorker worker = new NonSecureDistributorWorker(operations, calculationServer.getValue(), resultsForTask, calculationServer.getKey(), this.nbTasksTried);
 					executor.execute(worker);
 				}
 
@@ -58,6 +64,8 @@ public final class NonSecureDistributor extends Distributor {
 				int resultsCount = 0;
 				int threshold = 0;
 				boolean loadTooBig = false;
+
+				//Process the server results
 				for(ServerResult sr : resultsForTask) {
 						if(sr.getResult() != null) {
 							resultsCount++;
@@ -65,17 +73,18 @@ public final class NonSecureDistributor extends Distributor {
 
 						Exception failure = sr.getFailure();
 						if (!loadTooBig && failure != null && failure instanceof ServerTooBusyException) {
-							Utilities.log("Server was too busy");
-							//TODO
+							Utilities.log(String.format("Server [%d] was too busy", sr.getServerId()));
 							loadTooBig = true;
 						}
 
 						if (failure != null && failure instanceof RemoteException) {
-							//TODO
-							Utilities.log("RemoteException from server X");
+                                                        int serverId = sr.getServerId();
+							Utilities.log(String.format("RemoteException from server [%d], it will no longer be used.", serverId));
+							this.calculationServers.remove(serverId);
 						}
 				}
 
+				//Threshold for establishing a majority
 				threshold = resultsCount/2 + 1;
 
 				if (resultsCount == this.calculationServers.size()) {
@@ -86,6 +95,7 @@ public final class NonSecureDistributor extends Distributor {
 					this.m_projectedServerCapacity--;
 				}
 
+				//Try to establish a majority with the current results, if it fails, try with the past results too
 				if (resultsCount > 1) {
 					Map<Integer, Integer> occurencesForResult = new HashMap<Integer, Integer>();
 
@@ -144,6 +154,7 @@ public final class NonSecureDistributor extends Distributor {
 				}
 			}
 
+			//Majority has been determined so we can add the tasks to the donTasks list
 			if (majorityDetermined) {
 				ServerResult sr = new ServerResult();
 				sr.setResult(finalResult);

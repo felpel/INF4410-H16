@@ -14,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 public class Utilities {
+
+	//Function used to read a Json config file, deserialize it to an object of type clazz and return that object
 	public static <T> T readJsonConfiguration(String filename, Class<T> clazz) throws IOException {
 		Path configPath = Paths.get(filename);
 
@@ -23,13 +25,13 @@ public class Utilities {
 
 		Utilities.log(String.format("Loading configuration [%s]", clazz.toString()));
 		String json = new String(Files.readAllBytes(configPath));
-		System.out.println(json); // DEBUG
 
 		T cfg = null;
 		try {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			cfg = gson.fromJson(json, clazz);
+			Utilities.log(cfg.toString());
 		} catch (JsonParseException jpe) {
 			Utilities.logError("Unable to parse correctly JSON of calculation server configuration...");
 			jpe.printStackTrace();

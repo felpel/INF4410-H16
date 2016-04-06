@@ -1,752 +1,2165 @@
-[H[2J> Loading configuration [class distributor.DistributorConfiguration]
-{
-	"secure" : false,
-	"dataFilename" : "donnees-2606.txt",
-	"servers" :
-	[
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5001"
-		},
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5002"
-		},
-		{
-			"ip" : "127.0.0.1",
-			"port" : "5003"
-		}
-	]
-}
+[3;J[H[2J> Loading configuration [class distributor.DistributorConfiguration]
+> {"secure":false,"dataFilename":"all.txt","servers":[{"host":"132.207.12.51","port":5001},{"host":"132.207.12.57","port":5002},{"host":"132.207.12.59","port":5003}]}
+> [W2] Trying to process task...
+Task [#2]
+----------------------
+-	fib(43)
 
 > [W1] Trying to process task...
 Task [#1]
 ----------------------
--	fib(31)
-
-> [W2] Trying to process task...
-Task [#2]
-----------------------
--	fib(31)
+-	fib(43)
 
 > [W3] Trying to process task...
 Task [#3]
 ----------------------
--	fib(31)
+-	fib(43)
 
-> [W2] Received result from task [2] -> 3621
+> [W2] Received result from task [2] -> 1143
 > [W2] Finished
-> [W1] Received result from task [1] -> 1269
-> [W1] Finished
-> [W3] Received result from task [3] -> 1269
+> [W3] Received result from task [3] -> 4437
 > [W3] Finished
----> Majority result is : 1269
+> [W1] Received result from task [1] -> 4437
+> [W1] Finished
+---> Majority result is : 4437
 
 > [W1] Trying to process task...
 Task [#4]
 ----------------------
--	prime(208982)
--	fib(12)
+-	fib(2)
+-	fib(37)
 
 > [W2] Trying to process task...
 Task [#5]
 ----------------------
--	prime(208982)
--	fib(12)
+-	fib(2)
+-	fib(37)
 
 > [W3] Trying to process task...
 Task [#6]
 ----------------------
--	prime(208982)
--	fib(12)
+-	fib(2)
+-	fib(37)
 
-> [W3] Received result from task [6] -> 4635
-> [W3] Finished
-> [W1] Received result from task [4] -> 4635
-> [W1] Finished
-> [W2] Received result from task [5] -> 4635
+> [W2] Received result from task [5] -> 2914
 > [W2] Finished
----> Majority result is : 4635
-
-> [W2] Trying to process task...
-Task [#8]
-----------------------
--	prime(162698)
--	prime(207226)
--	fib(42)
+> [W3] Received result from task [6] -> 2818
+> [W3] Finished
+> [W1] Received result from task [4] -> 2818
+> [W1] Finished
+---> Majority result is : 2818
 
 > [W1] Trying to process task...
 Task [#7]
 ----------------------
--	prime(162698)
--	prime(207226)
--	fib(42)
+-	fib(31)
+-	prime(207926)
+-	fib(27)
 
-> [W2] Received result from task [8] -> 1297
-> [W2] Finished
+> [W2] Trying to process task...
+Task [#8]
+----------------------
+-	fib(31)
+-	prime(207926)
+-	fib(27)
+
 > [W3] Trying to process task...
 Task [#9]
 ----------------------
--	prime(162698)
--	prime(207226)
--	fib(42)
+-	fib(31)
+-	prime(207926)
+-	fib(27)
 
-> [W1] Received result from task [7] -> 4258
-> [W1] Finished
-> [W3] Received result from task [9] -> 4258
+> [W2] Received result from task [8] -> 3402
+> [W2] Finished
+> [W3] Received result from task [9] -> 1650
 > [W3] Finished
----> Majority result is : 4258
-
-> [W2] Trying to process task...
-Task [#11]
-----------------------
--	fib(9)
--	fib(0)
--	prime(162698)
--	prime(94790)
+> [W1] Received result from task [7] -> 1650
+> [W1] Finished
+---> Majority result is : 1650
 
 > [W1] Trying to process task...
 Task [#10]
 ----------------------
--	fib(9)
--	fib(0)
--	prime(162698)
--	prime(94790)
+-	fib(11)
+-	fib(14)
+-	prime(208358)
+-	fib(27)
+
+> [W2] Trying to process task...
+Task [#11]
+----------------------
+-	fib(11)
+-	fib(14)
+-	prime(208358)
+-	fib(27)
 
 > [W3] Trying to process task...
 Task [#12]
 ----------------------
--	fib(9)
--	fib(0)
--	prime(162698)
--	prime(94790)
+-	fib(11)
+-	fib(14)
+-	prime(208358)
+-	fib(27)
 
-> [W2] Received result from task [11] -> 474
+> [W2] Received result from task [11] -> 962
 > [W2] Finished
-> [W3] Received result from task [12] -> 862
+> [W3] Received result from task [12] -> 1063
 > [W3] Finished
-> [W1] Received result from task [10] -> 862
+> [W1] Received result from task [10] -> 1063
 > [W1] Finished
----> Majority result is : 862
+---> Majority result is : 1063
 
 > [W1] Trying to process task...
 Task [#13]
 ----------------------
--	prime(208246)
--	prime(207778)
--	prime(162098)
--	prime(208363)
--	fib(30)
+-	fib(11)
+-	prime(14290)
+-	prime(143373)
+-	fib(40)
+-	fib(18)
 
 > [W2] Trying to process task...
 Task [#14]
 ----------------------
--	prime(208246)
--	prime(207778)
--	prime(162098)
--	prime(208363)
--	fib(30)
+-	fib(11)
+-	prime(14290)
+-	prime(143373)
+-	fib(40)
+-	fib(18)
 
 > [W3] Trying to process task...
 Task [#15]
 ----------------------
--	prime(208246)
--	prime(207778)
--	prime(162098)
--	prime(208363)
--	fib(30)
+-	fib(11)
+-	prime(14290)
+-	prime(143373)
+-	fib(40)
+-	fib(18)
 
-> [W2] Received result from task [14] -> 1310
+> [W2] Received result from task [14] -> 729
 > [W2] Finished
-> [W1] Received result from task [13] -> 3164
+> [W1] Received result from task [13] -> 1048
 > [W1] Finished
-> [W3] Received result from task [15] -> 3164
+> [W3] Received result from task [15] -> 1048
 > [W3] Finished
----> Majority result is : 3164
+---> Majority result is : 1048
 
 > [W1] Trying to process task...
 Task [#16]
 ----------------------
--	fib(32)
--	prime(161618)
--	prime(207226)
--	prime(209414)
--	prime(9498)
--	fib(42)
+-	prime(143373)
+-	fib(40)
+-	prime(18958)
+-	prime(5961)
+-	fib(21)
+-	fib(0)
 
 > [W2] Trying to process task...
 Task [#17]
 ----------------------
--	fib(32)
--	prime(161618)
--	prime(207226)
--	prime(209414)
--	prime(9498)
--	fib(42)
+-	prime(143373)
+-	fib(40)
+-	prime(18958)
+-	prime(5961)
+-	fib(21)
+-	fib(0)
 
 > [W3] Trying to process task...
 Task [#18]
 ----------------------
+-	prime(143373)
+-	fib(40)
+-	prime(18958)
+-	prime(5961)
+-	fib(21)
+-	fib(0)
+
+> [W3] Received result from task [18] -> 4358
+> [W3] Finished
+> [W1] Received result from task [16] -> 4358
+> [W1] Finished
+> [W2] Received result from task [17] -> 4358
+> [W2] Finished
+---> Majority result is : 4358
+
+> [W1] Trying to process task...
+Task [#19]
+----------------------
+-	fib(4)
+-	prime(163294)
+-	fib(8)
+-	fib(10)
+-	fib(34)
+-	prime(114877)
+-	prime(54294)
+
+> [W2] Trying to process task...
+Task [#20]
+----------------------
+-	fib(4)
+-	prime(163294)
+-	fib(8)
+-	fib(10)
+-	fib(34)
+-	prime(114877)
+-	prime(54294)
+
+> [W3] Trying to process task...
+Task [#21]
+----------------------
+-	fib(4)
+-	prime(163294)
+-	fib(8)
+-	fib(10)
+-	fib(34)
+-	prime(114877)
+-	prime(54294)
+
+> [W2] Received result from task [20] -> 3009
+> [W2] Finished
+> [W1] Received result from task [19] -> 73
+> [W1] Finished
+> [W3] Received result from task [21] -> 73
+> [W3] Finished
+---> Majority result is : 73
+
+> [W1] Trying to process task...
+Task [#22]
+----------------------
+-	fib(4)
+-	fib(20)
+-	prime(161618)
+-	fib(33)
+-	prime(207926)
+-	fib(44)
+-	prime(49953)
+-	prime(208358)
+
+> [W2] Trying to process task...
+Task [#23]
+----------------------
+-	fib(4)
+-	fib(20)
+-	prime(161618)
+-	fib(33)
+-	prime(207926)
+-	fib(44)
+-	prime(49953)
+-	prime(208358)
+
+> [W3] Trying to process task...
+Task [#24]
+----------------------
+-	fib(4)
+-	fib(20)
+-	prime(161618)
+-	fib(33)
+-	prime(207926)
+-	fib(44)
+-	prime(49953)
+-	prime(208358)
+
+> [W3] Received result from task [24] -> 681
+> [W3] Finished
+> [W1] Received result from task [22] -> 681
+> [W1] Finished
+> [W2] Received result from task [23] -> 681
+> [W2] Finished
+---> Majority result is : 681
+
+> [W2] Trying to process task...
+Task [#26]
+----------------------
+-	fib(11)
+-	fib(32)
+-	fib(30)
+-	fib(27)
+-	fib(41)
+-	prime(49233)
+-	fib(13)
+-	prime(143378)
+-	prime(11922)
+
+> [W1] Trying to process task...
+Task [#25]
+----------------------
+-	fib(11)
+-	fib(32)
+-	fib(30)
+-	fib(27)
+-	fib(41)
+-	prime(49233)
+-	fib(13)
+-	prime(143378)
+-	prime(11922)
+
+> [W3] Trying to process task...
+Task [#27]
+----------------------
+-	fib(11)
+-	fib(32)
+-	fib(30)
+-	fib(27)
+-	fib(41)
+-	prime(49233)
+-	fib(13)
+-	prime(143378)
+-	prime(11922)
+
+> [W3] Finished
+> [W1] Received result from task [25] -> 4845
+> [W1] Finished
+> [W2] Received result from task [26] -> 4845
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 4845
+
+> [W1] Trying to process task...
+Task [#28]
+----------------------
+-	prime(208358)
+-	prime(65644)
+-	fib(3)
+-	fib(11)
+-	fib(31)
+-	fib(17)
+-	fib(39)
+-	prime(12664)
+
+> [W2] Trying to process task...
+Task [#29]
+----------------------
+-	prime(208358)
+-	prime(65644)
+-	fib(3)
+-	fib(11)
+-	fib(31)
+-	fib(17)
+-	fib(39)
+-	prime(12664)
+
+> [W3] Trying to process task...
+Task [#30]
+----------------------
+-	prime(208358)
+-	prime(65644)
+-	fib(3)
+-	fib(11)
+-	fib(31)
+-	fib(17)
+-	fib(39)
+-	prime(12664)
+
+> [W2] Received result from task [29] -> 428
+> [W2] Finished
+> [W1] Received result from task [28] -> 1116
+> [W1] Finished
+> [W3] Received result from task [30] -> 1116
+> [W3] Finished
+---> Majority result is : 1116
+
+> [W2] Trying to process task...
+Task [#32]
+----------------------
+-	prime(207932)
+-	prime(26745)
+-	prime(116557)
+-	fib(0)
+-	fib(20)
+-	fib(38)
+-	prime(118447)
+-	prime(83547)
+-	prime(12230)
+
+> [W1] Trying to process task...
+Task [#31]
+----------------------
+-	prime(207932)
+-	prime(26745)
+-	prime(116557)
+-	fib(0)
+-	fib(20)
+-	fib(38)
+-	prime(118447)
+-	prime(83547)
+-	prime(12230)
+
+> [W3] Trying to process task...
+Task [#33]
+----------------------
+-	prime(207932)
+-	prime(26745)
+-	prime(116557)
+-	fib(0)
+-	fib(20)
+-	fib(38)
+-	prime(118447)
+-	prime(83547)
+-	prime(12230)
+
+> [W2] Received result from task [32] -> 3097
+> [W2] Finished
+> [W3] Received result from task [33] -> 1024
+> [W3] Finished
+> [W1] Received result from task [31] -> 1024
+> [W1] Finished
+---> Majority result is : 1024
+
+> [W1] Trying to process task...
+Task [#34]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W2] Trying to process task...
+Task [#35]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W3] Trying to process task...
+Task [#36]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W2] Received result from task [35] -> 2202
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [34] -> 1912
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#37]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W3] Trying to process task...
+Task [#39]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W2] Trying to process task...
+Task [#38]
+----------------------
+-	prime(209414)
+-	prime(17413)
+-	fib(43)
+-	fib(20)
+-	prime(143373)
+-	prime(209414)
+-	fib(7)
+-	fib(22)
+-	prime(209414)
+-	prime(208982)
+
+> [W2] Received result from task [38] -> 2121
+> [W2] Finished
+> [W3] Received result from task [39] -> 1912
+> [W3] Finished
+> [W1] Received result from task [37] -> 1912
+> [W1] Finished
+---> Majority result is : 1912
+
+> [W1] Trying to process task...
+Task [#40]
+----------------------
+-	fib(22)
+-	prime(106752)
+-	prime(19466)
+-	fib(10)
+-	prime(68636)
+-	fib(13)
+-	prime(116557)
+-	fib(19)
+-	fib(23)
+-	fib(20)
+
+> [W2] Trying to process task...
+Task [#41]
+----------------------
+-	fib(22)
+-	prime(106752)
+-	prime(19466)
+-	fib(10)
+-	prime(68636)
+-	fib(13)
+-	prime(116557)
+-	fib(19)
+-	fib(23)
+-	fib(20)
+
+> [W3] Trying to process task...
+Task [#42]
+----------------------
+-	fib(22)
+-	prime(106752)
+-	prime(19466)
+-	fib(10)
+-	prime(68636)
+-	fib(13)
+-	prime(116557)
+-	fib(19)
+-	fib(23)
+-	fib(20)
+
+> [W2] Received result from task [41] -> 1144
+> [W2] Finished
+> [W3] Received result from task [42] -> 1284
+> [W3] Finished
+> [W1] Received result from task [40] -> 1284
+> [W1] Finished
+---> Majority result is : 1284
+
+> [W1] Trying to process task...
+Task [#43]
+----------------------
+-	prime(207778)
+-	prime(56874)
+-	prime(11061)
+-	prime(5178)
+-	fib(8)
+-	prime(2764)
+-	prime(144219)
+-	fib(43)
+-	fib(33)
+-	prime(208246)
+-	prime(6115)
+
+> [W2] Trying to process task...
+Task [#44]
+----------------------
+-	prime(207778)
+-	prime(56874)
+-	prime(11061)
+-	prime(5178)
+-	fib(8)
+-	prime(2764)
+-	prime(144219)
+-	fib(43)
+-	fib(33)
+-	prime(208246)
+-	prime(6115)
+
+> [W3] Trying to process task...
+Task [#45]
+----------------------
+-	prime(207778)
+-	prime(56874)
+-	prime(11061)
+-	prime(5178)
+-	fib(8)
+-	prime(2764)
+-	prime(144219)
+-	fib(43)
+-	fib(33)
+-	prime(208246)
+-	prime(6115)
+
+> [W3] Finished
+> [W1] Received result from task [43] -> 3606
+> [W1] Finished
+> [W2] Received result from task [44] -> 3606
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 3606
+
+> [W1] Trying to process task...
+Task [#46]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W3] Trying to process task...
+Task [#48]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W2] Trying to process task...
+Task [#47]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W2] Received result from task [47] -> 1551
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [46] -> 3306
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#49]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W2] Trying to process task...
+Task [#50]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W3] Trying to process task...
+Task [#51]
+----------------------
+-	fib(21)
+-	prime(3126)
+-	fib(44)
+-	prime(208246)
+-	prime(161618)
+-	fib(14)
+-	prime(107572)
+-	fib(31)
+-	prime(208982)
+-	fib(12)
+
+> [W3] Received result from task [51] -> 3306
+> [W3] Finished
+> [W1] Received result from task [49] -> 3306
+> [W1] Finished
+> [W2] Received result from task [50] -> 3306
+> [W2] Finished
+---> Majority result is : 3306
+
+> [W1] Trying to process task...
+Task [#52]
+----------------------
+-	prime(162698)
+-	prime(207226)
+-	fib(42)
+-	fib(9)
+-	fib(0)
+-	prime(162698)
+-	prime(94790)
+-	prime(208246)
+-	prime(207778)
+-	prime(162098)
+
+> [W2] Trying to process task...
+Task [#53]
+----------------------
+-	prime(162698)
+-	prime(207226)
+-	fib(42)
+-	fib(9)
+-	fib(0)
+-	prime(162698)
+-	prime(94790)
+-	prime(208246)
+-	prime(207778)
+-	prime(162098)
+
+> [W3] Trying to process task...
+Task [#54]
+----------------------
+-	prime(162698)
+-	prime(207226)
+-	fib(42)
+-	fib(9)
+-	fib(0)
+-	prime(162698)
+-	prime(94790)
+-	prime(208246)
+-	prime(207778)
+-	prime(162098)
+
+> [W3] Received result from task [54] -> 4181
+> [W3] Finished
+> [W1] Received result from task [52] -> 4181
+> [W1] Finished
+> [W2] Received result from task [53] -> 4181
+> [W2] Finished
+---> Majority result is : 4181
+
+> [W1] Trying to process task...
+Task [#55]
+----------------------
+-	prime(208363)
+-	fib(30)
 -	fib(32)
 -	prime(161618)
 -	prime(207226)
 -	prime(209414)
 -	prime(9498)
 -	fib(42)
-
-> [W2] Received result from task [17] -> 3263
-> [W2] Finished
-> [W1] Received result from task [16] -> 3317
-> [W1] Finished
-> [W3] Received result from task [18] -> 3317
-> [W3] Finished
----> Majority result is : 3317
-
-> [W1] Trying to process task...
-Task [#19]
-----------------------
 -	prime(25809)
 -	fib(6)
 -	fib(27)
--	fib(31)
--	fib(26)
--	fib(4)
--	fib(27)
-
-> [W2] Trying to process task...
-Task [#20]
-----------------------
--	prime(25809)
--	fib(6)
--	fib(27)
--	fib(31)
--	fib(26)
--	fib(4)
--	fib(27)
-
-> [W3] Trying to process task...
-Task [#21]
-----------------------
--	prime(25809)
--	fib(6)
--	fib(27)
--	fib(31)
--	fib(26)
--	fib(4)
--	fib(27)
-
-> [W3] Finished
-> [W1] Received result from task [19] -> 1738
-> [W1] Finished
-> [W2] Received result from task [20] -> 1738
-> [W2] Finished
-> Server was too busy
----> Majority result is : 1738
-
-> [W1] Trying to process task...
-Task [#22]
-----------------------
--	prime(145113)
--	prime(142599)
--	prime(4916)
--	fib(37)
--	prime(10003)
--	fib(12)
-
-> [W2] Trying to process task...
-Task [#23]
-----------------------
--	prime(145113)
--	prime(142599)
--	prime(4916)
--	fib(37)
--	prime(10003)
--	fib(12)
-
-> [W3] Trying to process task...
-Task [#24]
-----------------------
--	prime(145113)
--	prime(142599)
--	prime(4916)
--	fib(37)
--	prime(10003)
--	fib(12)
-
-> [W1] Received result from task [22] -> 1523
-> [W1] Finished
-> [W3] Received result from task [24] -> 1523
-> [W3] Finished
-> [W2] Received result from task [23] -> 1523
-> [W2] Finished
----> Majority result is : 1523
-
-> [W1] Trying to process task...
-Task [#25]
-----------------------
--	fib(37)
--	prime(207931)
--	prime(108572)
--	prime(4287)
--	fib(41)
--	fib(6)
--	fib(13)
-
-> [W2] Trying to process task...
-Task [#26]
-----------------------
--	fib(37)
--	prime(207931)
--	prime(108572)
--	prime(4287)
--	fib(41)
--	fib(6)
--	fib(13)
-
-> [W3] Trying to process task...
-Task [#27]
-----------------------
--	fib(37)
--	prime(207931)
--	prime(108572)
--	prime(4287)
--	fib(41)
--	fib(6)
--	fib(13)
-
-> [W2] Finished
-> [W1] Received result from task [25] -> 4702
-> [W1] Finished
-> [W3] Received result from task [27] -> 4702
-> [W3] Finished
-> Server was too busy
----> Majority result is : 4702
-
-> [W1] Trying to process task...
-Task [#28]
-----------------------
--	prime(2446)
--	fib(20)
--	fib(3)
--	prime(6145)
--	fib(33)
--	fib(25)
-
-> [W2] Trying to process task...
-Task [#29]
-----------------------
--	prime(2446)
--	fib(20)
--	fib(3)
--	prime(6145)
--	fib(33)
--	fib(25)
-
-> [W3] Trying to process task...
-Task [#30]
-----------------------
--	prime(2446)
--	fib(20)
--	fib(3)
--	prime(6145)
--	fib(33)
--	fib(25)
-
-> [W2] Received result from task [29] -> 3578
-> [W2] Finished
-> [W1] Received result from task [28] -> 3822
-> [W1] Finished
-> [W3] Received result from task [30] -> 3822
-> [W3] Finished
----> Majority result is : 3822
-
-> [W2] Trying to process task...
-Task [#32]
-----------------------
--	prime(81429)
--	prime(2589)
--	fib(33)
--	prime(9493)
--	prime(162098)
--	fib(20)
--	prime(106748)
-
-> [W3] Trying to process task...
-Task [#31]
-----------------------
--	prime(81429)
--	prime(2589)
--	fib(33)
--	prime(9493)
--	prime(162098)
--	fib(20)
--	prime(106748)
-
-> [W1] Trying to process task...
-Task [#33]
-----------------------
--	prime(81429)
--	prime(2589)
--	fib(33)
--	prime(9493)
--	prime(162098)
--	fib(20)
--	prime(106748)
-
-> [W2] Received result from task [32] -> 2301
-> [W2] Finished
-> [W3] Received result from task [31] -> 2948
-> [W3] Finished
-> [W1] Received result from task [33] -> 2948
-> [W1] Finished
----> Majority result is : 2948
-
-> [W1] Trying to process task...
-Task [#34]
-----------------------
--	prime(106748)
--	fib(7)
--	prime(142599)
--	fib(14)
--	prime(5331)
--	prime(18566)
--	fib(33)
--	prime(3194)
-
-> [W2] Trying to process task...
-Task [#35]
-----------------------
--	prime(106748)
--	fib(7)
--	prime(142599)
--	fib(14)
--	prime(5331)
--	prime(18566)
--	fib(33)
--	prime(3194)
-
-> [W3] Trying to process task...
-Task [#36]
-----------------------
--	prime(106748)
--	fib(7)
--	prime(142599)
--	fib(14)
--	prime(5331)
--	prime(18566)
--	fib(33)
--	prime(3194)
-
-> [W2] Received result from task [35] -> 1845
-> [W2] Finished
-> [W3] Received result from task [36] -> 1845
-> [W3] Finished
-> [W1] Received result from task [34] -> 1845
-> [W1] Finished
----> Majority result is : 1845
-
-> [W3] Trying to process task...
-Task [#39]
-----------------------
--	fib(11)
--	prime(108588)
--	fib(9)
--	prime(8562)
--	prime(163294)
--	prime(2446)
--	fib(34)
--	prime(51477)
--	prime(209414)
-
-> [W1] Trying to process task...
-Task [#37]
-----------------------
--	fib(11)
--	prime(108588)
--	fib(9)
--	prime(8562)
--	prime(163294)
--	prime(2446)
--	fib(34)
--	prime(51477)
--	prime(209414)
-
-> [W2] Trying to process task...
-Task [#38]
-----------------------
--	fib(11)
--	prime(108588)
--	fib(9)
--	prime(8562)
--	prime(163294)
--	prime(2446)
--	fib(34)
--	prime(51477)
--	prime(209414)
-
-> [W1] Finished
-> [W2] Received result from task [38] -> 3222
-> [W2] Finished
-> [W3] Received result from task [39] -> 3222
-> [W3] Finished
-> Server was too busy
----> Majority result is : 3222
-
-> [W1] Trying to process task...
-Task [#40]
-----------------------
--	fib(14)
--	fib(9)
--	fib(11)
--	prime(2858)
--	fib(5)
--	fib(43)
--	fib(42)
--	prime(108572)
-
-> [W2] Trying to process task...
-Task [#41]
-----------------------
--	fib(14)
--	fib(9)
--	fib(11)
--	prime(2858)
--	fib(5)
--	fib(43)
--	fib(42)
--	prime(108572)
-
-> [W3] Trying to process task...
-Task [#42]
-----------------------
--	fib(14)
--	fib(9)
--	fib(11)
--	prime(2858)
--	fib(5)
--	fib(43)
--	fib(42)
--	prime(108572)
-
-> [W2] Received result from task [41] -> 2810
-> [W2] Finished
-> [W1] Received result from task [40] -> 2810
-> [W1] Finished
-> [W3] Received result from task [42] -> 2810
-> [W3] Finished
----> Majority result is : 2810
-
-> [W1] Trying to process task...
-Task [#43]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W2] Trying to process task...
-Task [#44]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W3] Trying to process task...
-Task [#45]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W2] Finished
-> [W3] Finished
-> [W1] Received result from task [43] -> 1543
-> [W1] Finished
-> Server was too busy
-> [W1] Trying to process task...
-Task [#46]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W3] Trying to process task...
-Task [#48]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W2] Trying to process task...
-Task [#47]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W3] Finished
-> [W2] Received result from task [47] -> 3238
-> [W2] Finished
-> [W1] Received result from task [46] -> 1543
-> [W1] Finished
-> Server was too busy
-> [W1] Trying to process task...
-Task [#49]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W2] Trying to process task...
-Task [#50]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W3] Trying to process task...
-Task [#51]
-----------------------
--	prime(33302)
--	fib(43)
--	prime(207778)
--	fib(7)
--	fib(1)
--	prime(142599)
--	prime(46415)
--	prime(107063)
--	fib(4)
-
-> [W3] Finished
-> [W1] Received result from task [49] -> 1543
-> [W1] Finished
-> [W2] Received result from task [50] -> 1543
-> [W2] Finished
-> Server was too busy
----> Majority result is : 1543
-
-> [W2] Trying to process task...
-Task [#53]
-----------------------
--	fib(24)
--	prime(34318)
--	prime(3554)
--	prime(142599)
--	fib(33)
--	fib(9)
-
-> [W1] Trying to process task...
-Task [#52]
-----------------------
--	fib(24)
--	prime(34318)
--	prime(3554)
--	prime(142599)
--	fib(33)
--	fib(9)
-
-> [W3] Trying to process task...
-Task [#54]
-----------------------
--	fib(24)
--	prime(34318)
--	prime(3554)
--	prime(142599)
--	fib(33)
--	fib(9)
-
-> [W2] Received result from task [53] -> 2404
-> [W2] Finished
-> [W1] Received result from task [52] -> 2449
-> [W1] Finished
-> [W3] Received result from task [54] -> 2449
-> [W3] Finished
----> Majority result is : 2449
-
-> [W1] Trying to process task...
-Task [#55]
-----------------------
--	prime(18958)
--	fib(33)
--	fib(5)
--	prime(32822)
--	prime(4287)
--	fib(17)
 
 > [W2] Trying to process task...
 Task [#56]
 ----------------------
--	prime(18958)
--	fib(33)
--	fib(5)
--	prime(32822)
--	prime(4287)
--	fib(17)
+-	prime(208363)
+-	fib(30)
+-	fib(32)
+-	prime(161618)
+-	prime(207226)
+-	prime(209414)
+-	prime(9498)
+-	fib(42)
+-	prime(25809)
+-	fib(6)
+-	fib(27)
 
 > [W3] Trying to process task...
 Task [#57]
 ----------------------
+-	prime(208363)
+-	fib(30)
+-	fib(32)
+-	prime(161618)
+-	prime(207226)
+-	prime(209414)
+-	prime(9498)
+-	fib(42)
+-	prime(25809)
+-	fib(6)
+-	fib(27)
+
+> [W3] Received result from task [57] -> 75
+> [W3] Finished
+> [W1] Received result from task [55] -> 75
+> [W1] Finished
+> [W2] Received result from task [56] -> 75
+> [W2] Finished
+---> Majority result is : 75
+
+> [W2] Trying to process task...
+Task [#59]
+----------------------
+-	fib(31)
+-	fib(26)
+-	fib(4)
+-	fib(27)
+-	prime(145113)
+-	prime(142599)
+-	prime(4916)
+-	fib(37)
+-	prime(10003)
+-	fib(12)
+-	fib(37)
+-	prime(207931)
+
+> [W3] Trying to process task...
+Task [#60]
+----------------------
+-	fib(31)
+-	fib(26)
+-	fib(4)
+-	fib(27)
+-	prime(145113)
+-	prime(142599)
+-	prime(4916)
+-	fib(37)
+-	prime(10003)
+-	fib(12)
+-	fib(37)
+-	prime(207931)
+
+> [W1] Trying to process task...
+Task [#58]
+----------------------
+-	fib(31)
+-	fib(26)
+-	fib(4)
+-	fib(27)
+-	prime(145113)
+-	prime(142599)
+-	prime(4916)
+-	fib(37)
+-	prime(10003)
+-	fib(12)
+-	fib(37)
+-	prime(207931)
+
+> [W3] Finished
+> [W1] Received result from task [58] -> 1354
+> [W1] Finished
+> [W2] Received result from task [59] -> 1354
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 1354
+
+> [W1] Trying to process task...
+Task [#61]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W2] Trying to process task...
+Task [#62]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W3] Trying to process task...
+Task [#63]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W2] Received result from task [62] -> 1559
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [61] -> 2776
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#64]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W2] Trying to process task...
+Task [#65]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W3] Trying to process task...
+Task [#66]
+----------------------
+-	prime(108572)
+-	prime(4287)
+-	fib(41)
+-	fib(6)
+-	fib(13)
+-	prime(2446)
+-	fib(20)
+-	fib(3)
+-	prime(6145)
+-	fib(33)
+-	fib(25)
+
+> [W3] Finished
+> [W1] Received result from task [64] -> 2776
+> [W1] Finished
+> [W2] Received result from task [65] -> 2776
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 2776
+
+> [W2] Trying to process task...
+Task [#68]
+----------------------
+-	prime(81429)
+-	prime(2589)
+-	fib(33)
+-	prime(9493)
+-	prime(162098)
+-	fib(20)
+-	prime(106748)
+-	prime(106748)
+-	fib(7)
+
+> [W1] Trying to process task...
+Task [#67]
+----------------------
+-	prime(81429)
+-	prime(2589)
+-	fib(33)
+-	prime(9493)
+-	prime(162098)
+-	fib(20)
+-	prime(106748)
+-	prime(106748)
+-	fib(7)
+
+> [W3] Trying to process task...
+Task [#69]
+----------------------
+-	prime(81429)
+-	prime(2589)
+-	fib(33)
+-	prime(9493)
+-	prime(162098)
+-	fib(20)
+-	prime(106748)
+-	prime(106748)
+-	fib(7)
+
+> [W1] Received result from task [67] -> 4648
+> [W1] Finished
+> [W3] Received result from task [69] -> 4648
+> [W3] Finished
+> [W2] Received result from task [68] -> 4648
+> [W2] Finished
+---> Majority result is : 4648
+
+> [W2] Trying to process task...
+Task [#71]
+----------------------
+-	prime(142599)
+-	fib(14)
+-	prime(5331)
+-	prime(18566)
+-	fib(33)
+-	prime(3194)
+-	fib(11)
+-	prime(108588)
+-	fib(9)
+-	prime(8562)
+
+> [W1] Trying to process task...
+Task [#70]
+----------------------
+-	prime(142599)
+-	fib(14)
+-	prime(5331)
+-	prime(18566)
+-	fib(33)
+-	prime(3194)
+-	fib(11)
+-	prime(108588)
+-	fib(9)
+-	prime(8562)
+
+> [W3] Trying to process task...
+Task [#72]
+----------------------
+-	prime(142599)
+-	fib(14)
+-	prime(5331)
+-	prime(18566)
+-	fib(33)
+-	prime(3194)
+-	fib(11)
+-	prime(108588)
+-	fib(9)
+-	prime(8562)
+
+> [W3] Finished
+> [W1] Received result from task [70] -> 744
+> [W1] Finished
+> [W2] Received result from task [71] -> 744
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 744
+
+> [W1] Trying to process task...
+Task [#73]
+----------------------
+-	prime(163294)
+-	prime(2446)
+-	fib(34)
+-	prime(51477)
+-	prime(209414)
+-	fib(14)
+-	fib(9)
+-	fib(11)
+-	prime(2858)
+
+> [W2] Trying to process task...
+Task [#74]
+----------------------
+-	prime(163294)
+-	prime(2446)
+-	fib(34)
+-	prime(51477)
+-	prime(209414)
+-	fib(14)
+-	fib(9)
+-	fib(11)
+-	prime(2858)
+
+> [W3] Trying to process task...
+Task [#75]
+----------------------
+-	prime(163294)
+-	prime(2446)
+-	fib(34)
+-	prime(51477)
+-	prime(209414)
+-	fib(14)
+-	fib(9)
+-	fib(11)
+-	prime(2858)
+
+> [W1] Received result from task [73] -> 4552
+> [W1] Finished
+> [W3] Received result from task [75] -> 4552
+> [W3] Finished
+> [W2] Received result from task [74] -> 4552
+> [W2] Finished
+---> Majority result is : 4552
+
+> [W1] Trying to process task...
+Task [#76]
+----------------------
+-	fib(5)
+-	fib(43)
+-	fib(42)
+-	prime(108572)
+-	prime(33302)
+-	fib(43)
+-	prime(207778)
+-	fib(7)
+-	fib(1)
+-	prime(142599)
+
+> [W2] Trying to process task...
+Task [#77]
+----------------------
+-	fib(5)
+-	fib(43)
+-	fib(42)
+-	prime(108572)
+-	prime(33302)
+-	fib(43)
+-	prime(207778)
+-	fib(7)
+-	fib(1)
+-	prime(142599)
+
+> [W3] Trying to process task...
+Task [#78]
+----------------------
+-	fib(5)
+-	fib(43)
+-	fib(42)
+-	prime(108572)
+-	prime(33302)
+-	fib(43)
+-	prime(207778)
+-	fib(7)
+-	fib(1)
+-	prime(142599)
+
+> [W2] Received result from task [77] -> 2875
+> [W2] Finished
+> [W3] Received result from task [78] -> 3405
+> [W3] Finished
+> [W1] Received result from task [76] -> 3405
+> [W1] Finished
+---> Majority result is : 3405
+
+> [W2] Trying to process task...
+Task [#80]
+----------------------
+-	prime(46415)
+-	prime(107063)
+-	fib(4)
+-	fib(24)
+-	prime(34318)
+-	prime(3554)
+-	prime(142599)
+-	fib(33)
+-	fib(9)
 -	prime(18958)
 -	fib(33)
+
+> [W1] Trying to process task...
+Task [#79]
+----------------------
+-	prime(46415)
+-	prime(107063)
+-	fib(4)
+-	fib(24)
+-	prime(34318)
+-	prime(3554)
+-	prime(142599)
+-	fib(33)
+-	fib(9)
+-	prime(18958)
+-	fib(33)
+
+> [W3] Trying to process task...
+Task [#81]
+----------------------
+-	prime(46415)
+-	prime(107063)
+-	fib(4)
+-	fib(24)
+-	prime(34318)
+-	prime(3554)
+-	prime(142599)
+-	fib(33)
+-	fib(9)
+-	prime(18958)
+-	fib(33)
+
+> [W2] Received result from task [80] -> 3216
+> [W2] Finished
+> [W1] Received result from task [79] -> 525
+> [W1] Finished
+> [W3] Received result from task [81] -> 525
+> [W3] Finished
+---> Majority result is : 525
+
+> [W1] Trying to process task...
+Task [#82]
+----------------------
 -	fib(5)
 -	prime(32822)
 -	prime(4287)
 -	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
 
-> [W2] Received result from task [56] -> 1276
+> [W3] Trying to process task...
+Task [#83]
+----------------------
+-	fib(5)
+-	prime(32822)
+-	prime(4287)
+-	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
+
+> [W2] Trying to process task...
+Task [#84]
+----------------------
+-	fib(5)
+-	prime(32822)
+-	prime(4287)
+-	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
+
+> [W2] Received result from task [84] -> 3321
 > [W2] Finished
-> [W1] Received result from task [55] -> 3499
 > [W1] Finished
-> [W3] Received result from task [57] -> 3499
+> [W3] Received result from task [83] -> 1424
 > [W3] Finished
----> Majority result is : 3499
+> Server [1] was too busy
+> [W1] Trying to process task...
+Task [#85]
+----------------------
+-	fib(5)
+-	prime(32822)
+-	prime(4287)
+-	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
 
----> Start time: 26826782755028 ns	End time: 27365038498957 ns
----> Result = 2606	Time elapsed = 538255.743929 ms
+> [W2] Trying to process task...
+Task [#86]
+----------------------
+-	fib(5)
+-	prime(32822)
+-	prime(4287)
+-	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
+
+> [W3] Trying to process task...
+Task [#87]
+----------------------
+-	fib(5)
+-	prime(32822)
+-	prime(4287)
+-	fib(17)
+-	prime(208358)
+-	fib(32)
+-	fib(44)
+-	prime(209414)
+-	prime(85795)
+-	fib(35)
+-	prime(4287)
+-	fib(2)
+
+> [W3] Finished
+> [W2] Received result from task [86] -> 3631
+> [W2] Finished
+> [W1] Received result from task [85] -> 1424
+> [W1] Finished
+> Server [3] was too busy
+---> Majority result is : 1424
+
+> [W1] Trying to process task...
+Task [#88]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W2] Trying to process task...
+Task [#89]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W3] Trying to process task...
+Task [#90]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W3] Finished
+> [W2] Finished
+> [W1] Received result from task [88] -> 2397
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#91]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W2] Trying to process task...
+Task [#92]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W3] Trying to process task...
+Task [#93]
+----------------------
+-	prime(162698)
+-	prime(3455)
+-	fib(25)
+-	prime(162098)
+-	prime(144219)
+-	prime(10662)
+-	fib(43)
+-	fib(44)
+-	prime(2458)
+-	fib(9)
+
+> [W3] Finished
+> [W1] Received result from task [91] -> 2397
+> [W1] Finished
+> [W2] Received result from task [92] -> 2397
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 2397
+
+> [W1] Trying to process task...
+Task [#94]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W2] Trying to process task...
+Task [#95]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W3] Trying to process task...
+Task [#96]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W2] Received result from task [95] -> 2816
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [94] -> 4592
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#97]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W2] Trying to process task...
+Task [#98]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W3] Trying to process task...
+Task [#99]
+----------------------
+-	fib(2)
+-	prime(143373)
+-	prime(18996)
+-	prime(95066)
+-	fib(26)
+-	fib(42)
+-	fib(21)
+-	prime(162098)
+
+> [W2] Received result from task [98] -> 228
+> [W2] Finished
+> [W3] Received result from task [99] -> 4592
+> [W3] Finished
+> [W1] Received result from task [97] -> 4592
+> [W1] Finished
+---> Majority result is : 4592
+
+> [W1] Trying to process task...
+Task [#100]
+----------------------
+-	fib(38)
+-	prime(3461)
+-	fib(19)
+-	prime(120113)
+-	prime(208982)
+-	prime(13453)
+-	fib(37)
+-	prime(19466)
+
+> [W2] Trying to process task...
+Task [#101]
+----------------------
+-	fib(38)
+-	prime(3461)
+-	fib(19)
+-	prime(120113)
+-	prime(208982)
+-	prime(13453)
+-	fib(37)
+-	prime(19466)
+
+> [W3] Trying to process task...
+Task [#102]
+----------------------
+-	fib(38)
+-	prime(3461)
+-	fib(19)
+-	prime(120113)
+-	prime(208982)
+-	prime(13453)
+-	fib(37)
+-	prime(19466)
+
+> [W2] Received result from task [101] -> 1651
+> [W2] Finished
+> [W3] Received result from task [102] -> 1234
+> [W3] Finished
+> [W1] Received result from task [100] -> 1234
+> [W1] Finished
+---> Majority result is : 1234
+
+> [W2] Trying to process task...
+Task [#103]
+----------------------
+-	fib(38)
+-	prime(7948)
+-	fib(9)
+-	prime(162698)
+-	fib(3)
+-	fib(24)
+-	prime(18567)
+-	prime(18345)
+-	fib(20)
+
+> [W3] Trying to process task...
+Task [#104]
+----------------------
+-	fib(38)
+-	prime(7948)
+-	fib(9)
+-	prime(162698)
+-	fib(3)
+-	fib(24)
+-	prime(18567)
+-	prime(18345)
+-	fib(20)
+
+> [W1] Trying to process task...
+Task [#105]
+----------------------
+-	fib(38)
+-	prime(7948)
+-	fib(9)
+-	prime(162698)
+-	fib(3)
+-	fib(24)
+-	prime(18567)
+-	prime(18345)
+-	fib(20)
+
+> [W1] Received result from task [105] -> 2960
+> [W1] Finished
+> [W3] Received result from task [104] -> 2960
+> [W3] Finished
+> [W2] Received result from task [103] -> 2960
+> [W2] Finished
+---> Majority result is : 2960
+
+> [W1] Trying to process task...
+Task [#106]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Trying to process task...
+Task [#107]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Trying to process task...
+Task [#108]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [106] -> 1516
+> [W1] Finished
+> Server [2] was too busy
+> [W1] Trying to process task...
+Task [#109]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Trying to process task...
+Task [#110]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Trying to process task...
+Task [#111]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W1] Finished
+> [W3] Finished
+> [W2] Received result from task [110] -> 1516
+> [W2] Finished
+> Server [1] was too busy
+> [W1] Trying to process task...
+Task [#112]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Trying to process task...
+Task [#113]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Trying to process task...
+Task [#114]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Received result from task [113] -> 2124
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [112] -> 1516
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#115]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Trying to process task...
+Task [#116]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Trying to process task...
+Task [#117]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [115] -> 1516
+> [W1] Finished
+> Server [2] was too busy
+> [W1] Trying to process task...
+Task [#118]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W2] Trying to process task...
+Task [#119]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Trying to process task...
+Task [#120]
+----------------------
+-	prime(58398)
+-	prime(34318)
+-	prime(14264)
+-	fib(31)
+-	fib(24)
+-	prime(3687)
+-	fib(10)
+-	fib(30)
+-	fib(13)
+-	prime(163294)
+
+> [W3] Finished
+> [W1] Received result from task [118] -> 1516
+> [W1] Finished
+> [W2] Received result from task [119] -> 1516
+> [W2] Finished
+> Server [3] was too busy
+---> Majority result is : 1516
+
+> [W1] Trying to process task...
+Task [#121]
+----------------------
+-	fib(34)
+-	prime(66604)
+-	prime(32822)
+-	prime(208982)
+-	prime(163303)
+
+> [W2] Trying to process task...
+Task [#122]
+----------------------
+-	fib(34)
+-	prime(66604)
+-	prime(32822)
+-	prime(208982)
+-	prime(163303)
+
+> [W3] Trying to process task...
+Task [#123]
+----------------------
+-	fib(34)
+-	prime(66604)
+-	prime(32822)
+-	prime(208982)
+-	prime(163303)
+
+> [W2] Received result from task [122] -> 770
+> [W2] Finished
+> [W1] Received result from task [121] -> 1009
+> [W1] Finished
+> [W3] Received result from task [123] -> 1009
+> [W3] Finished
+---> Majority result is : 1009
+
+> [W1] Trying to process task...
+Task [#124]
+----------------------
+-	prime(9582)
+-	fib(30)
+-	fib(43)
+-	fib(33)
+-	prime(161618)
+-	prime(207926)
+
+> [W2] Trying to process task...
+Task [#125]
+----------------------
+-	prime(9582)
+-	fib(30)
+-	fib(43)
+-	fib(33)
+-	prime(161618)
+-	prime(207926)
+
+> [W3] Trying to process task...
+Task [#126]
+----------------------
+-	prime(9582)
+-	fib(30)
+-	fib(43)
+-	fib(33)
+-	prime(161618)
+-	prime(207926)
+
+> [W2] Received result from task [125] -> 3158
+> [W2] Finished
+> [W3] Received result from task [126] -> 2424
+> [W3] Finished
+> [W1] Received result from task [124] -> 2424
+> [W1] Finished
+---> Majority result is : 2424
+
+> [W1] Trying to process task...
+Task [#127]
+----------------------
+-	prime(163294)
+-	prime(162098)
+-	fib(9)
+-	fib(1)
+-	prime(208837)
+-	fib(32)
+-	prime(72392)
+
+> [W2] Trying to process task...
+Task [#128]
+----------------------
+-	prime(163294)
+-	prime(162098)
+-	fib(9)
+-	fib(1)
+-	prime(208837)
+-	fib(32)
+-	prime(72392)
+
+> [W3] Trying to process task...
+Task [#129]
+----------------------
+-	prime(163294)
+-	prime(162098)
+-	fib(9)
+-	fib(1)
+-	prime(208837)
+-	fib(32)
+-	prime(72392)
+
+> [W1] Received result from task [127] -> 3926
+> [W1] Finished
+> [W3] Received result from task [129] -> 3926
+> [W3] Finished
+> [W2] Received result from task [128] -> 3926
+> [W2] Finished
+---> Majority result is : 3926
+
+> [W1] Trying to process task...
+Task [#130]
+----------------------
+-	fib(38)
+-	prime(12776)
+-	prime(3194)
+-	fib(12)
+-	prime(7374)
+-	prime(145113)
+-	fib(42)
+-	fib(16)
+
+> [W2] Trying to process task...
+Task [#131]
+----------------------
+-	fib(38)
+-	prime(12776)
+-	prime(3194)
+-	fib(12)
+-	prime(7374)
+-	prime(145113)
+-	fib(42)
+-	fib(16)
+
+> [W3] Trying to process task...
+Task [#132]
+----------------------
+-	fib(38)
+-	prime(12776)
+-	prime(3194)
+-	fib(12)
+-	prime(7374)
+-	prime(145113)
+-	fib(42)
+-	fib(16)
+
+> [W2] Finished
+> [W3] Received result from task [132] -> 1390
+> [W3] Finished
+> [W1] Received result from task [130] -> 1390
+> [W1] Finished
+> Server [2] was too busy
+---> Majority result is : 1390
+
+> [W1] Trying to process task...
+Task [#133]
+----------------------
+-	prime(18103)
+-	fib(7)
+-	fib(35)
+-	fib(30)
+-	fib(29)
+-	fib(3)
+-	prime(5716)
+
+> [W2] Trying to process task...
+Task [#134]
+----------------------
+-	prime(18103)
+-	fib(7)
+-	fib(35)
+-	fib(30)
+-	fib(29)
+-	fib(3)
+-	prime(5716)
+
+> [W3] Trying to process task...
+Task [#135]
+----------------------
+-	prime(18103)
+-	fib(7)
+-	fib(35)
+-	fib(30)
+-	fib(29)
+-	fib(3)
+-	prime(5716)
+
+> [W2] Received result from task [134] -> 1019
+> [W2] Finished
+> [W1] Received result from task [133] -> 599
+> [W1] Finished
+> [W3] Received result from task [135] -> 599
+> [W3] Finished
+---> Majority result is : 599
+
+> [W1] Trying to process task...
+Task [#136]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W2] Trying to process task...
+Task [#137]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W3] Trying to process task...
+Task [#138]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W2] Received result from task [137] -> 2376
+> [W2] Finished
+> [W3] Finished
+> [W1] Received result from task [136] -> 3656
+> [W1] Finished
+> Server [3] was too busy
+> [W1] Trying to process task...
+Task [#139]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W2] Trying to process task...
+Task [#140]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W3] Trying to process task...
+Task [#141]
+----------------------
+-	fib(16)
+-	prime(207926)
+-	prime(116564)
+-	prime(8574)
+-	prime(3194)
+-	prime(207778)
+-	fib(7)
+-	prime(6388)
+
+> [W3] Finished
+> [W2] Received result from task [140] -> 3585
+> [W2] Finished
+> [W1] Received result from task [139] -> 3656
+> [W1] Finished
+> Server [3] was too busy
+---> Majority result is : 3656
+
+> [W1] Trying to process task...
+Task [#142]
+----------------------
+-	prime(108572)
+-	fib(4)
+-	prime(2858)
+-	fib(38)
+-	prime(85795)
+-	fib(18)
+
+> [W2] Trying to process task...
+Task [#143]
+----------------------
+-	prime(108572)
+-	fib(4)
+-	prime(2858)
+-	fib(38)
+-	prime(85795)
+-	fib(18)
+
+> [W3] Trying to process task...
+Task [#144]
+----------------------
+-	prime(108572)
+-	fib(4)
+-	prime(2858)
+-	fib(38)
+-	prime(85795)
+-	fib(18)
+
+> [W1] Received result from task [142] -> 1487
+> [W1] Finished
+> [W3] Received result from task [144] -> 1487
+> [W3] Finished
+> [W2] Received result from task [143] -> 1487
+> [W2] Finished
+---> Majority result is : 1487
+
+---> Start time: 290508268278851 ns	End time: 290900995803775 ns
+---> Result = 4095	Time elapsed = 392727.52492399997 ms

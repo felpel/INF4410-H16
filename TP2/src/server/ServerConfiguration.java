@@ -1,15 +1,23 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
-//TODO Try to validate parsed values ... does not work at the moment
+//Custom class that represents the configuration of a calculation server.
+
 public class ServerConfiguration {
-	private int capacity; // voir p.5 ("Sim. des ressources")
-	private int mischievious; // voir p.5 ("Serveur de calcul malicieux")
-	private int port; // voir p.8 ("Conseil pour le travail")
+  
+  //We need to expose these because it is required for the deserialization made by the Gson Builder
+  @Expose
+	private int capacity; // see p.5 ("Sim. des ressources")
+	@Expose
+	private int mischievious; // see p.5 ("Serveur de calcul malicieux")
+	@Expose
+	private int port; // see p.8 ("Conseil pour le travail")
+	@Expose
+	private String host;
 	
 	public void setCapacity(int capacity) {
-		//TODO Maybe verify if between 0 and 10 (see specs)
 		this.capacity = capacity;
 	}
 	
@@ -18,7 +26,6 @@ public class ServerConfiguration {
 	}
 	
 	public void setMischievious(int mischievious) {
-		//TODO Maybe verify if between 0 and 100 (%)
 		this.mischievious = mischievious;
 	}
 	
@@ -38,14 +45,19 @@ public class ServerConfiguration {
 		return this.port;
 	}
 	
-	public ServerConfiguration() {
-		this(10, 0, 5000);
+	public void setHost(String host) {
+    if (host == null || host.trim().isEmpty()) {
+            throw new IllegalArgumentException("Host must not be empty.");
+    }
+    
+    this.host = host;
 	}
 	
-	public ServerConfiguration(int capacity, int mischievious, int port) {
-		setCapacity(capacity);
-		setMischievious(mischievious);
-		setPort(port);
+	public String getHost() {
+    return this.host;
+	}
+	
+	public ServerConfiguration() {
 	}
 	
 	@Override

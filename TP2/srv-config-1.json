@@ -1,5 +1,6 @@
 {
 	"capacity": 8,
 	"mischievious" : 0,
-	"port" : 5001
+	"port" : 5001,
+	"host" : "127.0.0.1"
 }

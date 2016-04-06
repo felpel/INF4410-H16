@@ -36,6 +36,7 @@ public class Server implements ServerInterface {
 		}
 
 		try {
+			//We try to load the configuration based on the ID
 			this.loadConfiguration(id);
 			this.loadServerInRegistry();
 		} catch(IOException ioe) {
@@ -45,46 +46,49 @@ public class Server implements ServerInterface {
 
 	}
 
+	//Format the ID into the string for the filename
 	private void loadConfiguration(int id) throws IOException {
 		this.loadConfiguration(String.format("srv-config-%d.json", id));
 	}
 
+	//Assign the config returned by ReadJsonConfiguration
 	private void loadConfiguration(String filename) throws IOException {
 		this.configuration =
 			Utilities.<ServerConfiguration>readJsonConfiguration(filename, ServerConfiguration.class);
 	}
 
+	//Locate the registry then export this server
 	private void loadServerInRegistry() {
 		if (this.configuration == null) {
-			//Maybe load default configuration instead?
 			return;
 		}
 
 		ServerInterface stub = null;
 		Registry registry = null;
 		try {
-        stub = (ServerInterface) UnicastRemoteObject
-                        .exportObject(this, configuration.getPort());
-        registry = LocateRegistry.getRegistry("127.0.0.1", Constants.RMI_REGISTRY_PORT);
-				String uniqueName = String.format("srv-%d", configuration.getPort());
-        registry.rebind(uniqueName, stub);
-        Utilities.logInformation("Server ready.");
-				this.logServerInformation(uniqueName);
+      stub = (ServerInterface) UnicastRemoteObject
+                      .exportObject(this, configuration.getPort());
+      registry = LocateRegistry.getRegistry(configuration.getHost(), Constants.RMI_REGISTRY_PORT);
+      String uniqueName = String.format("srv-%d", configuration.getPort());
+      registry.rebind(uniqueName, stub);
+      Utilities.logInformation("Server ready.");
+      this.logServerInformation(uniqueName);
 
-    } catch (ConnectException e) {
-        System.err.println("Impossible to connect to the RMI registry." +
-                           "Has rmiregistry [" + configuration.getPort() + "] been started ?");
-        System.err.println();
-        System.err.println("Error: " + e.getMessage());
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-    }
+	  } catch (ConnectException e) {
+	      System.err.println("Impossible to connect to the RMI registry." +
+	                      "Has rmiregistry [" + Constants.RMI_REGISTRY_PORT + "] been started ?");
+	      System.err.println();
+	      System.err.println("Error: " + e.getMessage());
+	  } catch (Exception e) {
+	      System.err.println("Error: " + e.getMessage());
+	  }
 	}
 
 	private void logServerInformation(String name) {
 		Utilities.log("=============================================");
 		Utilities.log(String.format("Name:\t\t%s", name));
 		if (this.configuration != null) {
+                        Utilities.log(String.format("Host:\t\t%s", this.configuration.getHost()));
 			Utilities.log(String.format("Port:\t\t%s", this.configuration.getPort()));
 			if (this.configuration.getMischievious() == 0) {
 					Utilities.log("Server is not mischievous (0%).");
@@ -99,7 +103,7 @@ public class Server implements ServerInterface {
 		Utilities.log("=============================================\n");
 	}
 
-	//VERY IMPORTANT TO HANDLE REMOTE EXCEPTION ON CLIENT SIDE ("Pannes intempestives")
+	//Main function for processing a task
 	public int process(Task task) throws RemoteException, ServerTooBusyException
 	{
 		Utilities.log("Received new task!\n" + task.toString());
@@ -117,6 +121,7 @@ public class Server implements ServerInterface {
 
 		Utilities.logInformation("Processing task!");
 
+		//Calculate the actual answers to the operations in the task passed by param
 		int tempResult = 0;
 		for (Operation op : task.getOperations()) {
 			Utilities.logInformation(op.toString());
@@ -141,6 +146,7 @@ public class Server implements ServerInterface {
 		return tempResult;
 	}
 
+	//Function to simulate refusal if the task's size is greater than the server's capacity
 	private boolean accepts(Task task) {
 			int newOperations = task.getOperations().size();
 
@@ -162,6 +168,7 @@ public class Server implements ServerInterface {
 			return randomNumber > refusalRate;
 	}
 
+	//Function to simulate malicious activity if the config is appropriate
 	private boolean isMischievious() {
 		//Take in account the mischievous property of the server (See "Serveur de calculs malicieux")
 		int mischieviousRate = this.configuration.getMischievious();

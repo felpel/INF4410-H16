@@ -16,15 +16,19 @@ import java.rmi.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import shared.*;
 
+//Abstract class that defines how our distributors should work (both Secure and NonSecure)
+
 public abstract class Distributor {
 	protected DistributorConfiguration configuration = null;
-	protected List<ServerInterface> calculationServers = null;
+	protected Map<Integer, ServerInterface> calculationServers = null;
 	protected Queue<Operation> pendingOperations = null;
 	protected Queue<Task> doneTasks = null;
 	protected Queue<ServerResult> results = null;
@@ -32,13 +36,15 @@ public abstract class Distributor {
 	protected int nbOperations = 0;
 
 	public Distributor() {
-		this.calculationServers = new ArrayList<ServerInterface>();
+		this.calculationServers = new HashMap<Integer, ServerInterface>();
 		this.pendingOperations = new ConcurrentLinkedQueue<Operation>();
 		this.doneTasks = new ConcurrentLinkedQueue<Task>();
 		this.results = new ConcurrentLinkedQueue<ServerResult>();
 		this.nbTasksTried = new AtomicInteger(0);
 	}
 
+
+	//Initialize the distributor from the config passed in params and read the data file associated with that config
 	public final void initialize(DistributorConfiguration configuration) throws IllegalArgumentException {
 		if (configuration == null) {
 			throw new IllegalArgumentException("Configuration should not be null");
@@ -52,13 +58,11 @@ public abstract class Distributor {
 
 		this.loadServerStubs();
 
-		//TODO Check if we need other pre-conditions
 		if (this.calculationServers == null || this.calculationServers.isEmpty()) {
 			Utilities.logError("Can't calculate result since no servers were available...");
 			return;
 		}
 
-		//TODO Fix filename
 		try {
 			this.readOperations("./donnees/" + this.configuration.getDataFilename());
 		}
@@ -70,14 +74,14 @@ public abstract class Distributor {
 
 	private final void loadServerStubs() {
 		if (this.configuration == null) {
-			//TODO Maybe load default configuration?
 			return;
 		}
 
+		int nbServers = 0;
 		for (ServerInformation serverInfo : this.configuration.getServers()) {
 			ServerInterface stub = this.loadServerStub(serverInfo);
 			if (stub != null) {
-				this.calculationServers.add(stub);
+				this.calculationServers.put(new Integer(++nbServers), stub);
 			}
 		}
 	}
@@ -103,6 +107,7 @@ public abstract class Distributor {
 		ServerInterface stub = null;
 		try {
 			Registry registry = LocateRegistry.getRegistry(host, Constants.RMI_REGISTRY_PORT);
+			
 			String uniqueName = String.format("srv-%d", port);
 			stub = (ServerInterface) registry.lookup(uniqueName);
 		} catch (NotBoundException e) {
@@ -116,6 +121,7 @@ public abstract class Distributor {
 		return stub;
 	}
 
+	//Read all lines from a text file and populate the pending operation list
 	private final void readOperations(String filename) throws IOException {
 		Path filePath = Paths.get(filename);
 
@@ -128,9 +134,16 @@ public abstract class Distributor {
 
 		for (String instruction : instructions) {
 			String[] instructionElements = instruction.split(" ");
+			if (instructionElements.length != 2) {
+                                continue;
+			}
+			
 			String function = instructionElements[0];
 			int operand = Integer.parseInt(instructionElements[1]);
-			this.pendingOperations.add(new Operation(function, operand));
+			
+			if (function.equals("fib") || function.equals("prime")) {
+                            this.pendingOperations.add(new Operation(function, operand));
+			}
 		}
 
 		if (this.pendingOperations != null) {
@@ -138,6 +151,7 @@ public abstract class Distributor {
 		}
 	}
 
+	//Function to override
 	public abstract void process();
 
 	public final void showFinalResult(long duration) {
@@ -166,6 +180,7 @@ public abstract class Distributor {
 			}
 		}
 
-		Utilities.logInformation(String.format("Result = %d\tTime elapsed = %s ms", finalResult % 5000, Double.toString(duration * Math.pow(10, -6))));
+		String timeInMs = Double.toString(duration * Math.pow(10, -6));
+		Utilities.logInformation(String.format("Result = %d\tTime elapsed = %s ms", finalResult % 5000, timeInMs));
 	}
 }
