@@ -10,7 +10,6 @@ sudo apt-get install -f
 
 # installation de mysql-server, mysql-client, apache2,  php5, libapache2-mod-php5, php5-mysql, phpmyadmin. Dans le meme ordre
 
-
 #Necessaire pour certains packages
 sudo apt-get install -y debconf-utils
 
@@ -18,32 +17,18 @@ sudo apt-get install -y debconf-utils
 echo "Installation de mysql-server-5.5..."
 
 #https://serversforhackers.com/video/installing-mysql-with-debconf
+
+#permet d'eviter une fenetre interactive
 export DEBIAN_FRONTEND="noninteractive"
 
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password rootpw"
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password rootpw"
+sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password toor"
+sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password toor"
 
 sudo apt-get install -y mysql-server-5.5
 
-#Installation de mysql-client
-echo "Installation de mysql-client..."
-sudo apt-get install -y mysql-client
-
-#Installation de apache2
-echo "Installation de apache2..."
-sudo apt-get install -y apache2
-
-#Installation de php5
-echo "Installation de php5..."
-sudo apt-get install -y php5
-
-#Installation de libapache2-mod-php5
-echo "Installation de libapache2-mod-php5..."
-sudo apt-get install -y libapache2-mod-php5
-
-#Installation de php5-mysql
-echo "Installation de php5-mysql..."
-sudo apt-get install -y php5-mysql
+#Installation de mysql-client, apache2, php5, libapache2-mod-php5, php5-mysql
+echo "Installation de mysql-client, apache2, php5, libapache2-mod-php5, php5-mysql..."
+sudo apt-get install -y mysql-client apache2 php5 libapache2-mod-php5 php5-mysql
 
 #http://stackoverflow.com/questions/22440298/preseeding-phpmyadmin-skip-multiselect-skip-password
 #Installation de phpmyadmin
