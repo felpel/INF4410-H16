@@ -1,3 +1,6 @@
+
+#!/bin/bash
+
 # Identifier l'usager
 source ./INF4410-20-projet-openrc.sh
 
