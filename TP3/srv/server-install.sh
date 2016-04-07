@@ -1,17 +1,16 @@
 #!/bin/bash
 
+echo "================================================================="
+echo "Debut de l'installation automatique des packages sur le serveur"
+echo "================================================================="
+
+#permet d'eviter une fenetre interactive
+export DEBIAN_FRONTEND="noninteractive"
+
 #Clean reset pour les packages
+sudo apt-get update
 sudo dpkg --configure -a
 sudo apt-get install -f
-
-# reponses au questions de mysql-server-5.5 et de phpmyadmin en utilisant les outils fournis dans le paquage debconf-utils
-# -----------------------------------
-
-#Fourni initialement dans le script de base
-echo "Include /etc/phpmyadmin/apache.conf" | sudo tee --append /etc/apache2/apache2.conf
-sudo service apache2 restart
-
-# installation de mysql-server, mysql-client, apache2,  php5, libapache2-mod-php5, php5-mysql, phpmyadmin. Dans le meme ordre
 
 #Necessaire pour mysql-server-5.5 et phpmyadmin
 sudo apt-get install -y debconf-utils
@@ -22,9 +21,6 @@ echo "Installation de mysql-server-5.5..."
 echo "========================================="
 
 #https://serversforhackers.com/video/installing-mysql-with-debconf
-
-#permet d'eviter une fenetre interactive
-export DEBIAN_FRONTEND="noninteractive"
 
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password toor"
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password toor"
@@ -40,9 +36,7 @@ echo "==========================================================================
 
 sudo apt-get install -y mysql-client apache2 php5 libapache2-mod-php5 php5-mysql
 
-#http://stackoverflow.com/questions/22440298/preseeding-phpmyadmin-skip-multiselect-skip-password
 #Installation de phpmyadmin
-
 echo "=================================="
 echo "Installation de phpmyadmin..."
 echo "=================================="
@@ -58,6 +52,10 @@ sudo apt-get install -y phpmyadmin
 
 #Enleve les dependances de packages qui ne sont plus necessaires
 sudo apt-get autoremove
+
+#Fourni initialement dans le script de base
+echo "Include /etc/phpmyadmin/apache.conf" | sudo tee --append /etc/apache2/apache2.conf
+sudo service apache2 restart
 
 #Indique le status du serveur Apache, devrait normalement etre operationnel
 /etc/init.d/apache2 status
