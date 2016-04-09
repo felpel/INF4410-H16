@@ -1,0 +1,82 @@
+heat_template_version: 2014-10-16
+
+#Inspiré du template trouvé à l'URL suivant (GitHub) : http://bit.ly/1XOZsLl
+
+description: Un template pour déployer plusieurs serveurs avec un balanceur de charges (2.0)
+
+parameters:
+  image:
+    type: string
+    label: Image pour les serveurs (Python)
+    description: Image utilisee pour les serveurs
+    default: INF4410-Ubuntu-trusty-mini
+
+  flavor:
+    type: string
+    label: Flavor
+    description: Flavor utilisee par les serveurs
+    default: INF4410-mini
+
+  lb_net_id:
+    type: string
+    label: Sous-réseau (balanceur de charges)
+    description: Sous-reseau dans lequel le load balancer sera situe
+    default: 0c3b1354-d3d5-4fec-86d3-19d4d1f13785 #ext-net
+
+  server_net_id:
+    type: string
+    label: Sous-réseau (serveurs Python)
+    description: Reseau ou sera situe l'instance
+    default: cac571ab-8e5c-4332-8e05-4c69a56bda9e #reseau-pour-tous
+
+resources:
+  servers:
+      type: OS::Heat::ResourceGroup
+      properties:
+        count: 2
+        resource_def:
+            type: lb_server.yaml
+            properties:
+                name: server_%index%
+                image: { get_param: image }
+                flavor: { get_param: flavor }
+                network: { get_param: server_net_id }
+
+  pool:
+    type: OS::Neutron::Pool
+    properties:
+      protocol: HTTP
+      monitors: [ {get_resource: monitor }]
+      subnet_id: { get_param: subnet_id }
+      lb_method: ROUND_ROBIN
+      vip:
+        protocol_port: 80
+
+  lb:
+    type: OS::Neutron::LoadBalancer
+    properties:
+      protocol_port: 80
+      pool_id: { get_resource: pool }
+
+  lb_floating:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: lb_net_id }
+      port_id: { get_attr: [pool, vip, port_id] }
+
+  monitor:
+      type: OS::Neutron::HealthMonitor
+      properties:
+        type: TCP
+        delay: 13
+        max_retries: 2
+        timeout: 9
+
+outputs:
+  pool_ip_address:
+    description: L'adresse IP du pool de balanceur de charges
+    value: { get_attr: [pool, vip, address] }
+
+  lb_ip_adress:
+    description: L'adresse IP du balanceur de charges
+    value: { get_attr: [lb_floating, floating_ip_address] }

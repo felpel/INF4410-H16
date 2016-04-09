@@ -1,0 +1,48 @@
+heat_template_version: 2013-05-23
+
+description: Un serveur faisant parti d'un répartiteur de charges (2.0)
+
+parameters:
+  image:
+    type: string
+    description: Image utilisee
+
+  flavor:
+    type: string
+    description: Flavor utilisee
+
+  network:
+    type: string
+    label: Réseau interne
+    description: Reseau ou sera situe l'instance
+
+  pool_id:
+    type: string
+    description: Pool à contacter
+
+resources:
+  server:
+    type: OS::Nova::Server
+    properties:
+      flavor: {get_param: flavor}
+      image: {get_param: image}
+      networks: [{network: {get_param: network} }]
+      user_data: |
+          #!/bin/bash
+          wget http://secretaire.dorsal.polymtl.ca/~hdaoud/infonuagique/server.py
+          python server.py &
+
+  member:
+    type: OS::Neutron::PoolMember
+    properties:
+      pool_id: {get_param: pool_id}
+      address: {get_attr: [server, first_address]}
+      protocol_port: 8000 #Port utilisé par le serveur de lb
+
+outputs:
+  server_ip:
+    description: Adresse IP du serveur de répartiteur de charges
+    value: { get_attr: [server, first_address] }
+  lb_member:
+    description: Détails du membre du répartiteur de charges
+    value: { get_attr: [member, show] }
