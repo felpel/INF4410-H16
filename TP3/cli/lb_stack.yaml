@@ -35,7 +35,7 @@ resources:
       properties:
         count: 2
         resource_def:
-            type: lb_server.yaml
+            type: https://github.com/felpel/INF4410-H16/blob/master/TP3/cli/lb_server.yaml
             properties:
                 name: server_%index%
                 image: { get_param: image }
