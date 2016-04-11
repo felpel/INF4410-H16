@@ -17,16 +17,22 @@ parameters:
     description: Flavor utilisee par les serveurs
     default: INF4410-mini
 
-  lb_net_id:
-    type: string
-    label: Sous-réseau (balanceur de charges)
-    description: Sous-reseau dans lequel le load balancer sera situe
-    default: 0c3b1354-d3d5-4fec-86d3-19d4d1f13785 #ext-net
+#  lb_net_id:
+  #  type: string
+    #label: Sous-réseau (balanceur de charges)
+    #description: Sous-reseau dans lequel le load balancer sera situe
+    #default: 0c3b1354-d3d5-4fec-86d3-19d4d1f13785  #ext-net
 
-  server_net_id:
+  public_server_net:
     type: string
-    label: Sous-réseau (serveurs Python)
-    description: Reseau ou sera situe l'instance
+    label: Réseau public (serveurs Python)
+    description: Réseau public associé aux instances
+    default: bab3b2e9-8a18-442f-b8d4-98cba4d19dba #INF4410-20-net
+
+  private_server_net:
+    type: string
+    label: Réseau privé (serveurs Python)
+    description: Reseau privé associé aux instances
     default: cac571ab-8e5c-4332-8e05-4c69a56bda9e #reseau-pour-tous
 
 resources:
@@ -35,19 +41,25 @@ resources:
       properties:
         count: 2
         resource_def:
-            type: https://github.com/felpel/INF4410-H16/blob/master/TP3/cli/lb_server.yaml
+            type: OS::Nova::Server
             properties:
                 name: server_%index%
                 image: { get_param: image }
                 flavor: { get_param: flavor }
-                network: { get_param: server_net_id }
+                networks:
+                  - network : { get_param: public_server_net }
+                  - network : { get_param: private_server_net }
+                user_data: |
+                    #!/bin/bash
+                    wget http://secretaire.dorsal.polymtl.ca/~hdaoud/infonuagique/server.py
+                    python server.py &
 
   pool:
     type: OS::Neutron::Pool
     properties:
       protocol: HTTP
       monitors: [ {get_resource: monitor }]
-      subnet_id: { get_param: subnet_id }
+      subnet_id: { get_param: public_server_net }
       lb_method: ROUND_ROBIN
       vip:
         protocol_port: 80
@@ -58,11 +70,11 @@ resources:
       protocol_port: 80
       pool_id: { get_resource: pool }
 
-  lb_floating:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: lb_net_id }
-      port_id: { get_attr: [pool, vip, port_id] }
+  #lb_floating:
+    #type: OS::Neutron::FloatingIP
+    #properties:
+      #floating_network_id: { get_param: public_server_net }
+      #port_id: { get_attr: [pool, vip, port_id] }
 
   monitor:
       type: OS::Neutron::HealthMonitor
@@ -74,9 +86,9 @@ resources:
 
 outputs:
   pool_ip_address:
-    description: L'adresse IP du pool de balanceur de charges
+    description: L'adresse IP du pool de l'équilibreur de charges
     value: { get_attr: [pool, vip, address] }
 
-  lb_ip_adress:
-    description: L'adresse IP du balanceur de charges
-    value: { get_attr: [lb_floating, floating_ip_address] }
+  #lb_ip_adress:
+  #  description: L'adresse IP de l'équilibreur de charges
+    #value: { get_attr: [lb_floating, floating_ip_address] }
